@@ -1,7 +1,22 @@
 Romstools
 =========
 
-A variety of tools for plotting and analysing output from the Regional Ocean Model (ROMS - http://myroms.org/)
+This page contains a variety of tools for plotting and analysing output from the Regional Ocean Model
+(ROMS - http://myroms.org/). Currently, the following tools are separated into distinct folders as separate
+toolboxes that can be used indepdentely.
+
+<ul>
+<li>Volume flux calculations</li>
+</ul>
+
+
+<h3> General requirements</h3>
+<ul>
+<li>Python installation with numpy, basemap, and matplotlib</li>
+<li>Python netCDF4 interface - http://code.google.com/p/netcdf4-python/</li>
+<li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules</li>
+<li>A full Python distribution such as Anaconda or Enthought Python DDistribution is reccomended</li>
+</ul>
 
 
 <h3> Volume flux calculations </h3>
@@ -47,6 +62,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import iso
 >>> print iso.__doc__
 ```
+
+<h3> Contact </h3>
+
+<ul>
+<li>me (at) trondkristiansen.com</li>
+</ul>
+
 
 
 
