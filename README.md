@@ -1,10 +1,10 @@
-romstools
+Romstools
 =========
 
-A variety of tools for plotting and analysing output from the Regional Ocean Model (ROMS)
+A variety of tools for plotting and analysing output from the Regional Ocean Model (ROMS - http://myroms.org/)
 
 
-<h2> Volume flux calculations </h2>
+<h3> Volume flux calculations </h3>
 
 To calculate the fluxes you run the script <em>calculateFluxes.py</em> either as a standalone python program or executed
 as a job-script. If you run the program on a super-computer (e.g. Hexagon) you may want to run the script as a job
@@ -15,7 +15,7 @@ toolbox also available on github: https://github.com/kshedstrom/pyroms. However,
 entire toolbox to calculate the fluxes, this smaller toolbox was created.
 
 
-<h2> Define transects and depth ranges </h2>
+<h3> Define transects and depth ranges </h3>
 You can define a list of transects you want the volume transport calculated for in the function
 <strong>defineTransects().</strong>.  The output from running is a comma separated value file containing the positive,
 negative, and net transport through the transect. You can also caluclate the transport for the e.g. just the upper
@@ -26,7 +26,7 @@ minDepth=0
 maxDepth=500
 ```
 
-<h2> Requirements </h2>
+<h3> Requirements </h3>
 This toolbox still requires you to have a Fortran compiler to compile the Fortran programs and generate Python modules.
 On Hexagon this is done by loading the gnu modules (for Fortran compiler compatible with Python and numpy). In the
 terminal window type:
