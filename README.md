@@ -15,8 +15,8 @@ toolboxes that can be used indepdentely.
 <li>Python installation with numpy, basemap, and matplotlib</li>
 <li>Python netCDF4 interface - http://code.google.com/p/netcdf4-python/</li>
 <li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules</li>
-<li>A full Python distribution such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
-<a href="https://www.enthought.com/">Enthought Python Distribution</a> is reccomended</li>
+<li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
+<a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
 </ul>
 
 
@@ -31,7 +31,7 @@ toolbox also available on github: https://github.com/kshedstrom/pyroms. However,
 entire toolbox to calculate the fluxes, this smaller toolbox was created.
 
 
-<h3> Define transects and depth ranges </h3>
+<h4> Define transects and depth ranges </h4>
 You can define a list of transects you want the volume transport calculated for in the function
 <strong>defineTransects().</strong>.  The output from running is a comma separated value file containing the positive,
 negative, and net transport through the transect. You can also caluclate the transport for the e.g. just the upper
@@ -42,7 +42,7 @@ minDepth=0
 maxDepth=500
 ```
 
-<h3> Requirements </h3>
+<h4> Requirements </h4>
 This toolbox still requires you to have a Fortran compiler to compile the Fortran programs and generate Python modules.
 On Hexagon this is done by loading the gnu modules (for Fortran compiler compatible with Python and numpy). In the
 terminal window type:
