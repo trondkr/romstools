@@ -6,7 +6,8 @@ This page contains a variety of tools for plotting and analysing output from the
 toolboxes that can be used indepdentely.
 
 <ul>
-<li>Volume flux calculations</li>
+<li> Volume flux calculations</li>
+<li> Automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 </ul>
 
 
