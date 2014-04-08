@@ -15,7 +15,8 @@ toolboxes that can be used indepdentely.
 <li>Python installation with numpy, basemap, and matplotlib</li>
 <li>Python netCDF4 interface - http://code.google.com/p/netcdf4-python/</li>
 <li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules</li>
-<li>A full Python distribution such as Anaconda or Enthought Python DDistribution is reccomended</li>
+<li>A full Python distribution such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
+<a href="https://www.enthought.com/">Enthought Python Distribution</a> is reccomended</li>
 </ul>
 
 
