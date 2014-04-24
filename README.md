@@ -6,8 +6,9 @@ This page contains a variety of tools for plotting and analysing output from the
 toolboxes that can be used indepdentely.
 
 <ul>
-<li> Volume flux calculations</li>
-<li> Automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
+<li><strong>VolumeFlux</strong> - volume flux calculations for transects between (x,y) grid points</li>
+<li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
+<li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
 </ul>
 
 
@@ -20,6 +21,15 @@ toolboxes that can be used indepdentely.
 <a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
 </ul>
 
+<h3>Tools</h3>
+
+The tools section contains various programs to calculate long term averages, and trends based on a number of input
+files that typically cover a long time period. For example, if you want to analyse the modeled multi-year averages
+of short wave fluxes for the North Sea you can do so by running the "createAveragesOnHexagon.py" script.
+The script first calculates the  the averages on the supercomputer before downloading the resulting NetCDF4 fileto
+local computer. Finally, you can plot the results stored in the NetCDF4 file by running "createMaps.py". The result
+will look something like this:
+![alt tag](http://www.trondkristiansen.com/wp-content/gallery/romstools/longtermmean_shflux_time_depth_surface.jpg)
 
 <h3> Volume flux calculations </h3>
 
@@ -31,6 +41,7 @@ This toolbox is a mixture of Fortrand and Python tools where the core programs a
 toolbox also available on github: https://github.com/kshedstrom/pyroms. However, to avoid having to install the
 entire toolbox to calculate the fluxes, this smaller toolbox was created.
 
+![alt tag](http://www.trondkristiansen.com/wp-content/gallery/romstools/ns8km_vflux_volumeflux.png)
 
 <h4> Define transects and depth ranges </h4>
 You can define a list of transects you want the volume transport calculated for in the function
