@@ -25,11 +25,11 @@ toolboxes that can be used indepdentely.
 
 The tools section contains various programs to calculate long term averages, and trends based on a number of input
 files that typically cover a long time period. For example, if you want to analyse the modeled multi-year averages
-of short wave fluxes for the North Sea you can do so by running the "createAveragesOnHexagon.py" script.
-The script first calculates the  the averages on the supercomputer before downloading the resulting NetCDF4 fileto
-local computer. Finally, you can plot the results stored in the NetCDF4 file by running "createMaps.py". The result
+of short wave fluxes for the North Sea you can do so by running the <em>createAveragesOnHexagon.py</em> script.
+The script first calculates the averages on the supercomputer before downloading the resulting NetCDF4 files to
+local computer. Finally, you can plot the results stored in the NetCDF4 file by running <em>createMaps.py</em>. The result
 will look something like this:
-![alt tag](http://www.trondkristiansen.com/wp-content/gallery/romstools/longtermmean_shflux_time_depth_surface.jpg)
+![Shflux averaged 1993-2009](http://www.trondkristiansen.com/wp-content/gallery/romstools/longtermmean_shflux_time_depth_surface.jpg)
 
 <h3> Volume flux calculations </h3>
 
@@ -41,7 +41,7 @@ This toolbox is a mixture of Fortrand and Python tools where the core programs a
 toolbox also available on github: https://github.com/kshedstrom/pyroms. However, to avoid having to install the
 entire toolbox to calculate the fluxes, this smaller toolbox was created.
 
-![alt tag](http://www.trondkristiansen.com/wp-content/gallery/romstools/ns8km_vflux_volumeflux.png)
+![Calculated volume fluxes for various sections in the North Sea between 1993-2009](http://www.trondkristiansen.com/wp-content/gallery/romstools/ns8km_vflux_volumeflux.png)
 
 <h4> Define transects and depth ranges </h4>
 You can define a list of transects you want the volume transport calculated for in the function
