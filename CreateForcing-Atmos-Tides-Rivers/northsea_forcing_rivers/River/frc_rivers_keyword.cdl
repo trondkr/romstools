@@ -1,0 +1,69 @@
+netcdf nordsjoen_rivers {
+
+dimensions:
+	river_time = N_RIVER_TIME;
+	river = N_RIVERS ;
+	s_rho = NUMBEROFSRHOSURFACES ;
+
+variables:
+	double river(river) ;
+		river:long_name = "river runoff identification number" ;
+		river:units = "nondimensional" ;
+		river:field = "river, scalar" ;
+	double river_time(river_time) ;
+		river_time:long_name = "river runoff time" ;
+		river_time:units = "days since 1948-01-01 00:00:00" ;
+		river_time:field = "river_time, scalar, series" ;
+	double river_Xposition(river) ;
+		river_Xposition:long_name = "river XI-position at RHO-points" ;
+		river_Xposition:units = "nondimensional" ;
+		river_Xposition:valid_min = 1. ;
+		river_Xposition:valid_max = NINTRHOPOINTS_I. ;
+		river_Xposition:field = "river_Xposition, scalar" ;
+	double river_Eposition(river) ;
+		river_Eposition:long_name = "river ETA-position at RHO-points" ;
+		river_Eposition:units = "nondimensional" ;
+		river_Eposition:valid_min = 1. ;
+		river_Eposition:valid_max = NINTRHOPOINTS_J. ;
+		river_Eposition:field = "river_Eposition, scalar" ;
+	double river_direction(river) ;
+		river_direction:long_name = "river runoff direction" ;
+		river_direction:units = "nondimensional" ;
+		river_direction:field = "river_direction, scalar" ;
+	double river_Vshape(s_rho, river) ;
+		river_Vshape:long_name = "river runoff mass transport vertical profile" ;
+		river_Vshape:units = "nondimensional" ;
+		river_Vshape:field = "river_Vshape, scalar" ;
+	double river_transport(river_time, river) ;
+		river_transport:long_name = "river runoff vertically integrated mass transport" ;
+		river_transport:units = "meter3 second-1" ;
+		river_transport:field = "river_transport, scalar, series" ;
+		river_transport:time = "river_time" ;
+	double river_flag(river) ;
+		river_flag:long_name = "river runoff tracer flag" ;
+		river_flag:option_0 = "all tracers are off" ;
+		river_flag:option_1 = "only temperature is on" ;
+		river_flag:option_2 = "only salinity is on" ;
+		river_flag:option_3 = "both temperature and salinity are on" ;
+		river_flag:units = "nondimensional" ;
+		river_flag:field = "river_flag, scalar" ;
+	double river_temp(river_time, s_rho, river) ;
+		river_temp:long_name = "river runoff potential temperature" ;
+		river_temp:units = "Celsius" ;
+		river_temp:field = "river_temp, scalar, series" ;
+		river_temp:time = "river_time" ;
+	double river_salt(river_time, s_rho, river) ;
+		river_salt:long_name = "river runoff salinity" ;
+		river_salt:units = "PSU" ;
+		river_salt:field = "river_salt, scalar, series" ;
+		river_salt:time = "river_time" ;
+
+// global attributes:
+		:type = "ROMS river forcing file" ;
+		:title = "River forcing for Nordsjoen-8km" ;
+		:grd_file = "nordsjoen_8km_grid.nc" ;
+		:rivers = "Rivers in Europe from E-HYPE" ;
+		:institution = "SMHI" ;
+                :history = "Created by MakeRivers.f90 based on data from E-HYPE";
+                :Conventions = "CF-1.0";
+}
