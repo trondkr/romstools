@@ -1,14 +1,13 @@
 Romstools
 =========
 
-This page contains a variety of tools for plotting and analysing output from the Regional Ocean Model
-(ROMS - http://myroms.org/). Currently, the following tools are separated into distinct folders as separate
-toolboxes that can be used indepdentely.
+Romstools is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
 
 <ul>
 <li><strong>VolumeFlux</strong> - volume flux calculations for transects between (x,y) grid points</li>
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
+<li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.
 </ul>
 
 
@@ -19,6 +18,7 @@ toolboxes that can be used indepdentely.
 <li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules</li>
 <li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
 <a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
+<li>Fortran NetCDF interface (required to compile CreateForcing-Atmos-Tides-Rivers)</li>
 </ul>
 
 <h3>Tools</h3>
