@@ -4,6 +4,7 @@ Romstools
 Romstools is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
 
 <ul>
+<li><strong>CreateObsFileIS4DVAR</strong> - Generate observation file from SST required to run IS4DVAR assimilation with ROMS </li>
 <li><strong>VolumeFlux</strong> - volume flux calculations for transects between (x,y) grid points</li>
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
@@ -30,6 +31,10 @@ The script first calculates the averages on the supercomputer before downloading
 local computer. Finally, you can plot the results stored in the NetCDF4 file by running <em>createMaps.py</em>. The result
 will look something like this:
 ![Shflux averaged 1993-2009](http://www.trondkristiansen.com/wp-content/gallery/romstools/longtermmean_shflux_time_depth_surface.jpg)
+
+<h3> Generate observation file for IS4DVAR </h3>
+
+This is a set of scripts that automatically downloads Sea Surface Temperature (SST) data for your grid for the time period you are interested in and stored the data as an observation file. This file requires a special format and is read by ROMS when assimilating SST data using the Incremental Strong constraint 4DVAR assimilation technique. The SST data are downloaded using openDAP from the CoRTAD SST archive (http://www.nodc.noaa.gov/sog/Cortad/).
 
 <h3> Volume flux calculations </h3>
 
