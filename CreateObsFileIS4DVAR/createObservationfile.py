@@ -41,49 +41,7 @@ def help():
     Trond Kristiansen, 08.04.2012, 30.11.2012, 03.12.2012
     """
 
-def findSubsetIndices(min_lat,max_lat,min_lon,max_lon,lats,lons):
 
-    """Array to store the results returned from the function"""
-    res=np.zeros((4),dtype=np.float64)
-    minLon=min_lon; maxLon=max_lon
-
-    distances1 = []; distances2 = []
-    indices=[]; index=1
-
-    for point in lats:
-        s1 = max_lat-point # (vector subtract)
-        s2 = min_lat-point # (vector subtract)
-        distances1.append((np.dot(s1, s1), point, index))
-        distances2.append((np.dot(s2, s2), point, index-1))
-        index=index+1
-
-    distances1.sort()
-    distances2.sort()
-    indices.append(distances1[0])
-    indices.append(distances2[0])
-
-    distances1 = []; distances2 = []; index=1
-
-    for point in lons:
-        s1 = maxLon-point # (vector subtract)
-        s2 = minLon-point # (vector subtract)
-        distances1.append((np.dot(s1, s1), point, index))
-        distances2.append((np.dot(s2, s2), point, index-1))
-        index=index+1
-
-    distances1.sort()
-    distances2.sort()
-    indices.append(distances1[0])
-    indices.append(distances2[0])
-
-    """ Save final product: max_lat_indices,min_lat_indices,max_lon_indices,min_lon_indices"""
-    minJ=indices[1][2]
-    maxJ=indices[0][2]
-    minI=indices[3][2]
-    maxI=indices[2][2]
-
-    res[0]=minI; res[1]=maxI; res[2]=minJ; res[3]=maxJ;
-    return res
 
 def addEtopo1Bathymetry(ax,map):
     """Get the etopo1 data"""
@@ -133,9 +91,10 @@ def addGridToMap(map,grid_lon,grid_lat,doEveryTenthX):
 
 def drawSST(ax,map,longSST,latSST,filledSST,myalpha):
     # Input arrays has to be 2D
-    print "Drawing SST: max %s and min %s"%(filledSST.min(), filledSST.max())
+    print "Drawing SST: min %s and max %s"%(filledSST.min(), filledSST.max())
     x2, y2 = map(longSST,latSST)
     levels=np.arange(2,18,0.5)
+    #levels=np.arange(filledSST.min(), filledSST.max(),0.2)
 
     if myalpha > 0.99:
         CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
@@ -151,7 +110,6 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
     fig=plt.figure(figsize=(12,12))
     ax=fig.add_subplot(111)
     doBathymetry=False
-
     if lonStart< 0 and lonEnd < 0:
         lon_0= - (abs(lonEnd)+abs(lonStart))/2.0
     elif lonStart > 0 and lonEnd > 0:
@@ -169,7 +127,7 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
 
     map.drawcoastlines()
     map.drawcountries()
-    map.fillcontinents(color='grey')
+ #   map.fillcontinents(color='grey')
     map.drawmeridians(np.arange(lonStart,lonEnd,10),labels=[0,0,0,1])
     map.drawparallels(np.arange(latStart,latEnd,4),labels=[1,0,0,0])
 
@@ -181,7 +139,7 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
     #addGridToMap(map,grid_lon,grid_lat,doEveryTenthX=10)
 
     """Draw original SST"""
-    drawSST(ax,map,lonSST2D,latSST2D,origSST,0.25)
+    drawSST(ax,map,lonSST2D,latSST2D,origSST,0.5)
 
     """Draw interpolated  SST"""
     drawSST(ax,map,lon_rho,lat_rho,SSTi,1.0)
@@ -191,6 +149,7 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
 
     """Save the map to file and finish ---------------------------"""
     plt.title('Grid: %s SST time:%s'%(name,currentDate))
+    if not os.path.exists("figures"): os.mkdir("figures")
     plotfile='figures/SST_northsea_'+str(figureNumber)+'.png'
     print "Saving map to file %s"%(plotfile)
     plt.savefig(plotfile)
@@ -214,6 +173,7 @@ def getGrid(filename):
     cdf=Dataset(filename)
     grid_lon=cdf.variables["lon_rho"][:]
     grid_lat=cdf.variables["lat_rho"][:]
+    mask_rho=cdf.variables["mask_rho"][:]
     grid_h=cdf.variables["h"]
     print "Grid dimmensions: %s and %s"%(grid_lon.shape,grid_lat.shape)
     cdf.close()
@@ -226,7 +186,7 @@ def getGrid(filename):
     print "Grid domain longitude from %s to %s"%(grid_lon_min,grid_lon_max)
     print "Grid domain latitude from %s to %s"%(grid_lat_min,grid_lat_max)
     print "----\n"
-    return grid_lon, grid_lat,grid_h
+    return mask_rho, grid_lon, grid_lat,grid_h
 
 
 def ingrid(lon, lat, lon_bd,lat_bd):
@@ -252,13 +212,13 @@ def main():
     """Define the start and end date you want data extracted for:"""
     startYear=2009
     startMonth=8
-    endYear=2010
+    endYear=2012
     endMonth=12
     maxTries=3
     delay=10
     firstIteration=True
     lastIteration=False
-    createFigure=False
+    createFigure=True
     figureNumber=0
     USENETCDF4=True    # if false then use NETCDF3_CLASSIC
 
@@ -268,8 +228,8 @@ def main():
     if os.path.exists(outputFile): os.remove(outputFile)
 
     """Read the grid info from the grid file"""
-    filename="../Grid/nordsjoen_8km_grid_hmax20m.nc"
-    lon_rho,lat_rho,grid_h = getGrid(filename)
+    filename="/Users/trondkr/Projects/is4dvar/Grid/nordsjoen_8km_grid_hmax20m_v3.nc"
+    mask_rho, lon_rho,lat_rho,grid_h = getGrid(filename)
 
     """Calculate the x,y grid coordinates"""
     (Mp,Lp)=lon_rho.shape
@@ -287,7 +247,6 @@ def main():
     refDateROMS=datetime.datetime(1948,1,1,0,0,0)
     delta=refDate-refDateROMS
     daysSince1948to1980=delta.days
-
 
     """Find the start and end indexes to extract"""
     foundStart=False; foundEnd=False; startIndex=-9; endIndex=-9
@@ -312,25 +271,38 @@ def main():
     print "-----------------------------------------------\n"
 
     """Get the lomgitude-latitudes of the combination of tiles"""
-    lonSST2D, latSST2D, lonSST, latSST = getCortad.extractCoRTADLongLat(maxTries,delay)
-
+    longitude, latitude, lonSST, latSST, indexes = getCortad.extractCoRTADLongLat(maxTries,
+                                                                        delay,
+                                                                        lon_rho.min(),
+                                                                        lon_rho.max(),
+                                                                        lat_rho.min(),
+                                                                        lat_rho.max())
+    indexes=np.asarray(indexes,dtype=np.int32)
+    latitude  = np.flipud(latitude[indexes[3]:indexes[2]])
+    longitude = longitude[indexes[0]:indexes[1]]
 
     """Loop over all times and store to file or make map"""
-    polygon_data = getPolygon(lonSST,latSST,lon_rho,lat_rho)
-
+    polygon_data = getPolygon(lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
+                              latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
+                              lon_rho,lat_rho)
     survey_time=[]
 
     for t in xrange(len(times)):
         
         """Open the files and check that NOAA is online"""
-        cdf1,cdf2,cdf3,cdf4=getCortad.openCoRTAD(maxTries,delay)        
+        cdf = getCortad.openCoRTAD(maxTries,delay)
         currentDate=refDateROMS + datetime.timedelta(days=int(mytime[times[t]])+daysSince1948to1980)
 
         """ Get the data for the current time"""
-        filledSST = getCortad.extractCORTADSST("North Sea",times[t],cdf1,cdf2,cdf3,cdf4)
-        
+        filledSST = getCortad.extractCORTADSST("North Sea",times[t],cdf,indexes)
+
         """Interpolate the original values to the grid. This is the data that will be saved to file"""
-        SSTi = mp.interp(filledSST,lonSST,latSST,lon_rho,lat_rho,checkbounds=False,masked=False,order=1)
+
+        np.where(abs(filledSST) > 25, 0, filledSST)
+
+        SSTi = mp.interp(np.flipud(filledSST),longitude,latitude,
+                         lon_rho,lat_rho,checkbounds=False,masked=False,order=1)
+        SSTi = SSTi*mask_rho
 
         igood=np.nonzero(SSTi)
         numberOfobs=len(SSTi[igood])
@@ -358,7 +330,9 @@ def main():
         lat_start=43; lat_end=71.5; lon_start=-20; lon_end=35
 
         if createFigure is True:
-            makeMap(figureNumber,lon_start,lon_end,lat_start,lat_end,filename,SSTi,lon_rho,lat_rho,polygon_data,currentDate,filledSST,lonSST2D,latSST2D)
+            makeMap(figureNumber,lon_start,lon_end,lat_start,lat_end,filename,SSTi,lon_rho,lat_rho,polygon_data,currentDate,
+                    filledSST,lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
+                              latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]])
             figureNumber+=1
 
         """ Finished, now cleanup and make sure everything are arrays"""
@@ -379,13 +353,17 @@ def main():
         obs_depth = 35*unos #If positive has to be the sigma level, if negative depth in meters
         obs_variance=np.asarray(np.ones(Nstate))
 
+
+        print "Min and max of SST to file: %s - %s"%(obs_value.min(),obs_value.max())
+
+
         writeObsfile.writeData(outputFile,obs_lat,obs_lon,obs_value,Nobs,survey_time,obs_time,obs_Xgrid,obs_Ygrid,
                                firstIteration,lastIteration,
                                obs_flag,obs_type,obs_error,obs_Zgrid,obs_depth,obs_variance,
                                survey,is3d,Nstate,USENETCDF4)
         firstIteration=False
         """Close the opendap files"""
-        cdf1.close();cdf2.close();cdf3.close();cdf4.close();
+        cdf.close();
 
     """Cleanup and write final dimensions and variables"""
     lastIteration=True
