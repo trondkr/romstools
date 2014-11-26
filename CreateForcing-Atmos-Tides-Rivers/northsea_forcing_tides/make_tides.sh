@@ -5,9 +5,9 @@
 #--------------------------------------
 #
 # Start and end period for simulation
-syear=2009; eyear=2012
+syear=1990; eyear=2014
 # Input files
-gridfile=../nordsjoen_8km_grid.nc
+gridfile=../../../KINO/GRID/kino_norseas_800m_grid.nc
 ###tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo7.2
 tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
 #
@@ -36,7 +36,7 @@ mv tmp1.fil ./tidenc2roms.sup
 ln -sf ../Tpxo/nordsjoen_8km_tpxo.nc ./tpxo.nc
 ./tidenc2roms
 rm ./tpxo.nc
-mv ./tide.nc ../nordsjoen_8km_tides.nc
+mv ./tide.nc ../KINO_800m_tides.nc
 module unload pgi/11.10.0
 #
 cd ..
