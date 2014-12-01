@@ -107,7 +107,7 @@ Move into folder ```northsea_forcing_rivers```, edit the file ```make_rivers.sh`
 years="2009 2010 2011 2012"
 gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
 ```
-Next compile and run with  ```./make_atmos.sh``` 
+Next compile and run with  ```./make_atmos.sh``` or use the batch job script   ```qsub runMakeAtmos.sh```
 
 <h3> Contact </h3>
 
