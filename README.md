@@ -72,7 +72,6 @@ module unload notur
 f2py --verbose  -c -m iso iso.f90
 f2py --verbose  -c -m obs_interp obs_interp.f
 ```
-
 This should provide you with two python modules (obs_interp.so and iso.so) which you can try to import to python with:
 
 ```bash
@@ -82,6 +81,17 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import iso
 >>> print iso.__doc__
 ```
+<h3> Create forcing for Atmosphere - Tides - Rivers </h3>
+This toolset contains necessary files to create forcing files for the atmosphere, tides, and river forcing. 
+
+<h4>  Tides </h4>
+Get the toolbox and move into folder ```make_tides```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup:
+<li> syear=1990; eyear=2014 </li>
+<li> gridfile=../../../KINO/GRID/kino_norseas_800m_grid.nc </li>
+<li> tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean </li>
+
+Next compile and run with  ```./make_tides.sh``` 
+
 <h3> Contact </h3>
 
 <ul>
