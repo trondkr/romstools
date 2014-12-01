@@ -2,8 +2,7 @@ Romstools
 =========
 [![GitHub version](https://badge.fury.io/gh/trondkr%2Fromstools.svg)](http://badge.fury.io/gh/trondkr%2Fromstools)
 
-Romstool
-s is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
+Romstools is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
 
 <ul>
 <li><strong>CreateObsFileIS4DVAR</strong> - Generate observation file from SST required to run IS4DVAR assimilation with ROMS </li>
@@ -22,7 +21,7 @@ s is a toolbox that contains a variety of programs useful for Regional Ocean Mod
 <li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
 <a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
 <li>Fortran NetCDF interface (required to compile CreateForcing-Atmos-Tides-Rivers)</li>
-<li> To run interaxctively on Hexagon (HPC) remember to: <h4>module unload xtpe-interlagos</h4> </li>
+<li> To run interaxctively on Hexagon (HPC) remember to: <b>module unload xtpe-interlagos</b> </li>
 </ul>
 
 <h3>Tools</h3>
