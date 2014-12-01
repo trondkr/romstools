@@ -84,12 +84,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 <h3> Create forcing for Atmosphere - Tides - Rivers </h3>
 This toolset contains necessary files to create forcing files for the atmosphere, tides, and river forcing. 
 
-<h4>  Tides </h4>
+<h4> Tides </h4>
 Get the toolbox and move into folder ```make_tides```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup:
-<li> syear=1990; eyear=2014 </li>
-<li> gridfile=../../../KINO/GRID/kino_norseas_800m_grid.nc </li>
-<li> tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean </li>
-
+``` bash
+syear=1990; eyear=2014
+gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
+tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
+```
 Next compile and run with  ```./make_tides.sh``` 
 
 <h3> Contact </h3>
