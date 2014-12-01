@@ -22,6 +22,7 @@ s is a toolbox that contains a variety of programs useful for Regional Ocean Mod
 <li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
 <a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
 <li>Fortran NetCDF interface (required to compile CreateForcing-Atmos-Tides-Rivers)</li>
+<li> To run interaxctively on Hexagon (HPC) remember to: module unload xtpe-interlagos </li>
 </ul>
 
 <h3>Tools</h3>
