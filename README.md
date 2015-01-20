@@ -64,7 +64,7 @@ maxDepth=500
 <h4> Requirements </h4>
 This toolbox still requires you to have a Fortran compiler to compile the Fortran programs and generate Python modules.
 On Hexagon this is done by loading the gnu modules (for Fortran compiler compatible with Python and numpy). In the
-terminal window type:
+terminal window type (note: you do not issue the two first commands 'module swap' and 'module unload' you work on super computers):
 
 ```bash
 module swap PrgEnv-pgi PrgEnv-gnu
