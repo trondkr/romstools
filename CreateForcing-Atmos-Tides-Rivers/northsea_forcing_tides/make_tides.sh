@@ -7,14 +7,14 @@
 # Start and end period for simulation
 syear=1990; eyear=2014
 # Input files
-gridfile=../../../KINO/GRID/kino_norseas_800m_grid.nc
+gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
 ###tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo7.2
 tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
 #
 cd Tpxo
 if [ -s tpxo2grid ]; then rm tpxo2grid *.o; fi
 make
-./tpxo2grid ${gridfile} nc nordsjoen_8km_tpxo.nc ${tpxodir}   # Extract TPXO-data to new model domain
+./tpxo2grid ${gridfile} nc kino_800m_tpxo.nc ${tpxodir}   # Extract TPXO-data to new model domain
 #
 cd ../Tides
 module load pgi/11.10.0  # Program core-dumps with a newer pgi-compiler

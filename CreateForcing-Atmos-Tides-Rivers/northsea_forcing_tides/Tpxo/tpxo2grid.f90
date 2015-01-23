@@ -153,6 +153,7 @@ program tpxo2grid
      status=nf_inq_varid(ncid,"mask_rho",varid); call check_err(status)
      status=nf_get_var_real(ncid,varid,topo); call check_err(status)
      status=nf_close(ncid); call check_err(status)
+
      allocate(lon_grid(imax-2,jmax-2),lat_grid(imax-2,jmax-2))
      allocate(topo_grid(imax-2,jmax-2))
      lon_grid(:,:)=lon_rho(2:imax-1,2:jmax-1)
