@@ -53,7 +53,7 @@ entire toolbox to calculate the fluxes, this smaller toolbox was created.
 <h4> Define transects and depth ranges </h4>
 You can define a list of transects you want the volume transport calculated for in the function
 <em>defineTransects()</em>.  The output from running is a comma separated value file containing the positive,
-negative, and net transport through the transect. You can also caluclate the transport for the e.g. just the upper
+negative, and net transport through the transect. You can also calculate the transport for the e.g. just the upper
 500 meters of the water column by defining the minimum and maximum depths:
 
 ```Python
