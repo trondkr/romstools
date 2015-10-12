@@ -21,6 +21,7 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 <li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
 <a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
 <li>Fortran NetCDF interface (required to compile CreateForcing-Atmos-Tides-Rivers)</li>
+<li> To run interaxctively on Hexagon (HPC) remember to: <b>module unload xtpe-interlagos</b> </li>
 </ul>
 
 <h3>Tools</h3>
@@ -63,7 +64,7 @@ maxDepth=500
 <h4> Requirements </h4>
 This toolbox still requires you to have a Fortran compiler to compile the Fortran programs and generate Python modules.
 On Hexagon this is done by loading the gnu modules (for Fortran compiler compatible with Python and numpy). In the
-terminal window type:
+terminal window type (note: you do not issue the two first commands 'module swap' and 'module unload' unless you work on super computers):
 
 ```bash
 module swap PrgEnv-pgi PrgEnv-gnu
@@ -71,7 +72,6 @@ module unload notur
 f2py --verbose  -c -m iso iso.f90
 f2py --verbose  -c -m obs_interp obs_interp.f
 ```
-
 This should provide you with two python modules (obs_interp.so and iso.so) which you can try to import to python with:
 
 ```bash
@@ -81,6 +81,34 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import iso
 >>> print iso.__doc__
 ```
+<h3> Create forcing for Atmosphere - Tides - Rivers </h3>
+This toolset contains necessary files to create forcing files for the atmosphere, tides, and river forcing. 
+
+<h4> Tides </h4>
+Get the toolbox and move into folder ```northsea_forcing_tides```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup:
+``` bash
+syear=1990; eyear=2014
+gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
+tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
+```
+Next compile and run with  ```./make_tides.sh``` 
+
+<h4> Atmospheric forcing (ERA Interim) </h4>
+Move into folder ```northsea_forcing_atmos```, edit the file ```make_atmos.sh``` so that the following variables are correct according to your setup:
+``` bash
+years="2009 2010 2011 2012"
+gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
+```
+Next compile and run with  ```./make_atmos.sh``` 
+
+<h4> River forcing </h4>
+Move into folder ```northsea_forcing_rivers```, edit the file ```make_rivers.sh``` so that the following variables are correct according to your setup:
+``` bash
+years="2009 2010 2011 2012"
+gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
+```
+Next compile and run with  ```./make_atmos.sh``` or use the batch job script   ```qsub runMakeAtmos.sh```
+
 <h3> Contact </h3>
 
 <ul>
