@@ -66,7 +66,7 @@ def contourMap(myCDF, bathymetry,lonrho,latrho,myvar,survey,Nobs,obs,first):
     map.drawmapboundary()
     print "Min %s and max %s of data"%(np.ma.min(mydata),np.ma.max(mydata))
     
-    map.scatter(x,y,s=4,c=mydata,cmap=cm.get_cmap('jet'), edgecolor='none')
+    map.scatter(x,y,s=4,c=mydata,cmap=cm.get_cmap('jet'), edgecolor='none',vmin=-0.5, vmax=16)
     c = plt.colorbar(orientation='horizontal')
     c.set_label("Obs. SST")
 
@@ -86,13 +86,13 @@ def contourMap(myCDF, bathymetry,lonrho,latrho,myvar,survey,Nobs,obs,first):
    # scatter(xgrid,ygrid,s=4,c=bathymetry/np.ma.max(bathymetry),cmap=cm.get_cmap('jet'), edgecolor='none')
    #
    # ax2.axis('tight')
-   # plotfile='figures/obs_'+str(myvar)+'_'+str(currentDate)+'.jpeg'
+    plotfile='figures/obs_'+str(myvar)+'_'+str(currentDate)+'.jpeg'
 
-    #plt.savefig(plotfile)
-    plt.show()
+    plt.savefig(plotfile)
+   # plt.show()
 
 
-infile="NS8KM_obsSST_2006_to_2010.nc"
+infile="NS8KM_obsSST_2009_to_2012.nc"
 gridfile="/Users/trondkr/Projects/is4dvar/Grid/nordsjoen_8km_grid_hmax20m.nc"
 
 myvar="obs_value"
@@ -125,7 +125,7 @@ maxsurvey=Nobs.shape[0]
 
 surveys=np.arange(0,maxsurvey,1)
 
-increment=10; counter=0
+increment=1; counter=0
 for survey,obs in zip(surveys,Nobs):
 
     if (counter==increment):

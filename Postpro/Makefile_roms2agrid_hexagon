@@ -1,0 +1,32 @@
+#
+#                   Makefile for interpolating ROMS results on s-levels from C-grid to A-grid
+FC = ftn
+FFLAGS = -O3
+#
+LIBPATH = $(NETCDF_DIR)/lib
+#
+INCLUDE = $(NETCDF_DIR)/include
+#
+LIBRARY = netcdf
+#
+TARGETS = all clean
+EXECS   = roms2agrid
+#
+#
+all: $(EXECS)
+
+roms2agrid: roms2agrid.o
+	$(FC) $(FFLAGS) -o $@ roms2agrid.f90 -O3 handle_err.f90 fill.f90 jd.f90 gregorian.f90 -I$(INCLUDE) -L$(LIBPATH) -l$(LIBRARY)
+
+roms2agrid.o: roms2agrid.f90
+fill.o: fill.f90
+handle_err.o: handle_err.f90
+jd.o: jd.f90
+gregorian.o: gregorian.f90
+
+clean:
+	@for name in $(EXECS) ; do\
+	(rm -f $$name $$name.o); \
+
+	done
+

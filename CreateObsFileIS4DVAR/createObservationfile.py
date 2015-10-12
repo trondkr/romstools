@@ -93,11 +93,13 @@ def drawSST(ax,map,longSST,latSST,filledSST,myalpha):
     # Input arrays has to be 2D
     print "Drawing SST: min %s and max %s"%(filledSST.min(), filledSST.max())
     x2, y2 = map(longSST,latSST)
-    levels=np.arange(2,18,0.5)
+    levels=np.arange(-2,18,0.5)
     #levels=np.arange(filledSST.min(), filledSST.max(),0.2)
 
     if myalpha > 0.99:
-        CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
+        #CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
+        CS2 = map.pcolor(x2,y2,filledSST)
+     
         plt.colorbar(CS2,orientation='vertical',extend='both', shrink=0.5)
     else:
         CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
@@ -211,14 +213,14 @@ def main():
     startTime = time.time()
     """Define the start and end date you want data extracted for:"""
     startYear=2009
-    startMonth=8
+    startMonth=10
     endYear=2012
     endMonth=12
     maxTries=3
     delay=10
     firstIteration=True
     lastIteration=False
-    createFigure=True
+    createFigure=False
     figureNumber=0
     USENETCDF4=True    # if false then use NETCDF3_CLASSIC
 
@@ -240,7 +242,7 @@ def main():
 
     """CoRTAD time is days since 1980/12/31 12:00:00"""
     mytime=getCortad.getCORTADtime()
-    refDate=datetime.datetime(1980,12,31,12,0,0)
+    refDate=datetime.datetime(1981,12,31,12,0,0)
 
     """Have to convert the day of observation to the relative time used by ROMS
     which is 1948/1/1:00:00:00"""
@@ -258,14 +260,19 @@ def main():
                     foundStart=True
                     startIndex=index
                     print "\n-----------------------------------------------"
-                    print "Start date %s at index %s"%(currentDate,index)
+                    print "Start date %s at index %s"%(currentDate,startIndex)
 
         if foundEnd is False:
             if currentDate.year==endYear:
                 if currentDate.month==endMonth:
                     foundEnd=True
                     endIndex=index
-                    print "End date %s at index %s"%(currentDate,index)
+                    print "FIXME : HARDCODING LAST INDEX !!!!!!!!!!!!!!!!!\n\n\n"
+                    endIndex=1616
+                    currentDate = refDateROMS + datetime.timedelta(days=float(mytime[endIndex])+daysSince1948to1980)
+                    print "FIXME : HARDCODING LAST INDEX !!!!!!!!!!!!!!!!!\n\n\n"
+
+                    print "End date %s at index %s"%(currentDate,endIndex)
     times=[i for i in range(startIndex,endIndex,1)]
     print "Created array of %s time-steps to iterate and extract data from"%(len(times))
     print "-----------------------------------------------\n"
@@ -293,15 +300,17 @@ def main():
         cdf = getCortad.openCoRTAD(maxTries,delay)
         currentDate=refDateROMS + datetime.timedelta(days=int(mytime[times[t]])+daysSince1948to1980)
 
+        
         """ Get the data for the current time"""
         filledSST = getCortad.extractCORTADSST("North Sea",times[t],cdf,indexes)
 
         """Interpolate the original values to the grid. This is the data that will be saved to file"""
 
-        np.where(abs(filledSST) > 25, 0, filledSST)
-
         SSTi = mp.interp(np.flipud(filledSST),longitude,latitude,
-                         lon_rho,lat_rho,checkbounds=False,masked=False,order=1)
+                             lon_rho,lat_rho,checkbounds=False,masked=True,order=1)
+
+        SSTi = np.where(SSTi < -0.5, -0.5, SSTi)
+
         SSTi = SSTi*mask_rho
 
         igood=np.nonzero(SSTi)
@@ -312,10 +321,9 @@ def main():
         obs_value=SSTi[igood]
         obs_Xgrid=roms_Xgrid[igood]
         obs_Ygrid=roms_Ygrid[igood]
-
         Nobs=numberOfobs
         survey_time.append(int(mytime[times[t]])+daysSince1948to1980)
-
+       
         obs_time=[]
         for ot in xrange(numberOfobs):
             obs_time.append(int(mytime[times[t]])+daysSince1948to1980)
@@ -325,14 +333,14 @@ def main():
         print "Found %s observations for %s"%(numberOfobs, currentDate)
 
         """Create map where the colored data shows the interpolated values and the
-        grey colored data are the original data"""
+            grey colored data are the original data"""
         """Define the max and minimim area to crate map for (not used to create obs file)"""
         lat_start=43; lat_end=71.5; lon_start=-20; lon_end=35
 
         if createFigure is True:
             makeMap(figureNumber,lon_start,lon_end,lat_start,lat_end,filename,SSTi,lon_rho,lat_rho,polygon_data,currentDate,
-                    filledSST,lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
-                              latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]])
+                        filledSST,lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
+                                  latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]])
             figureNumber+=1
 
         """ Finished, now cleanup and make sure everything are arrays"""
@@ -358,12 +366,13 @@ def main():
 
 
         writeObsfile.writeData(outputFile,obs_lat,obs_lon,obs_value,Nobs,survey_time,obs_time,obs_Xgrid,obs_Ygrid,
-                               firstIteration,lastIteration,
-                               obs_flag,obs_type,obs_error,obs_Zgrid,obs_depth,obs_variance,
-                               survey,is3d,Nstate,USENETCDF4)
+                                   firstIteration,lastIteration,
+                                   obs_flag,obs_type,obs_error,obs_Zgrid,obs_depth,obs_variance,
+                                   survey,is3d,Nstate,USENETCDF4)
         firstIteration=False
         """Close the opendap files"""
         cdf.close();
+    
 
     """Cleanup and write final dimensions and variables"""
     lastIteration=True

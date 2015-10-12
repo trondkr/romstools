@@ -16,26 +16,28 @@ __status__   = "Development, 03.12.2012, 10.11.2014"
 
 def getCORTADtime():
 
-    #base="http://data.nodc.noaa.gov/thredds/dodsC/cortad/Version4/"
-    base="http://data.nodc.noaa.gov/thredds/dodsC/testdata/cortad_v5/"
+    base="http://data.nodc.noaa.gov/thredds/dodsC/cortad/Version5/"
 
-    #file1="cortadv4_row01_col07.nc"
     file1="cortadv5_FilledSST.nc"
+
 
     filename1=base+file1
     cdf1=Dataset(filename1)
 
     print "Time: Extrating timedata from openDAP: %s"%(filename1)
-
+    
     time=np.squeeze(cdf1.variables["time"][:])
+    
     cdf1.close()
     return time
 
 def openCoRTAD(maxTries,delay):
-    """ Info on the different tiles used to identoify a region is found here:
+    """ Info on the different tiles used to identify a region is found here:
     http://www.nodc.noaa.gov/SatelliteData/Cortad/TileMap.jpg"""
 
-    base="http://data.nodc.noaa.gov/thredds/dodsC/testdata/cortad_v5/"
+    base="http://data.nodc.noaa.gov/thredds/dodsC/cortad/Version5/"
+    #base="http://data.nodc.noaa.gov/cortad/Version5/"
+
     file1="cortadv5_FilledSST.nc"
 
     hostname="data.nodc.noaa.gov"
@@ -153,19 +155,19 @@ def extractCORTADSST(name,t,cdf,indexes):
 
     filledSST=cdf.variables["FilledSST"][t,indexes[3]:indexes[2],indexes[0]:indexes[1]]
     offset=cdf.variables["FilledSST"].__getattribute__('add_offset')
-
-
-    filledMaskedSST=np.where(filledSST > 270, filledSST  - offset, filledSST)
+    # Kelvin to Celsius
+    filledSST = filledSST-offset
+    #filledMaskedSST=np.where(filledSST > 270, filledSST  - offset, filledSST)
 
     """ Scale and offset is autmoatically detected and edited by netcdf, but
     we need to mask the values that are not filled."""
-    filledMaskedSST_final=ma.masked_less(filledMaskedSST,-2.)
-    filledMaskedSST_final=ma.masked_greater(filledMaskedSST,25.)
+    #filledMaskedSST_final=ma.masked_less(filledMaskedSST,-2.)
+    #filledMaskedSST_final=ma.masked_greater(filledMaskedSST,25.)
 
-    print "Min and max of SST: %s - %s"%(filledMaskedSST_final.min(),filledMaskedSST_final.max())
+    print "Min and max of SST: %s - %s"%(filledSST.min(),filledSST.max())
     print "------------------------------\n"
 
-    return filledMaskedSST_final
+    return filledSST
 
 
         

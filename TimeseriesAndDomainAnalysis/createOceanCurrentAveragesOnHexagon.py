@@ -13,16 +13,16 @@ __status__   = "Production"
 
 """Start EDIT"""
 
-myprefix = 'northsea_8km'
-apattern = 'northsea_8km_z.nc_*'
+myprefix = 'ocean_avg_'
+apattern = 'ocean_avg_00*'
 outfile  = 'allfiles.nc'
 
 myhostname="hexagon.bccs.uib.no"
 myusername="trondk"
-mypassword="passord"
-remotedir="/work/users/trondk/NS8km/ANALYSIS/"
-remoteSTORAGEdir="/work/jonal/Nordsjoen-8km/Storage_monthly/"
-localdir="/Users/trondkr/Projects/is4dvar/Analysis/"
+mypassword="ivNavac92171"
+remotedir="/work/users/trondk/KINO/FORWARD/Run/"
+remoteSTORAGEdir="/work/users/trondk/KINO/FORWARD/Run/"
+localdir="/Users/trondkr/Projects/KINO/Analysis/"
 first=False
 
 """This script calculates the domain averages of u_eastward an v_northward velocity at specified depth
@@ -51,11 +51,12 @@ stdin, stdout, stderr = ssh.exec_command(command)
 ftp = ssh.open_sftp()
         
 season="all"      
-depth="10"
+depth="40"
 
 outfile='ueastward_allfiles.nc'
 """Extract all data of variable u_eastward"""
 command = 'cdo -select,name=u_eastward %s%s %s%s'%(remoteSTORAGEdir,apattern,remotedir,outfile)
+print command
 stdin, stdout, stderr = ssh.exec_command(command)
 exit_status = stdout.channel.recv_exit_status()
 

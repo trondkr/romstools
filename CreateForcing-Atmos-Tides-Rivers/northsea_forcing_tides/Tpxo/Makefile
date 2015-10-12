@@ -1,6 +1,6 @@
 #
 #                                 Makefile for producing ROMS forcing
-FC = ftn
+FC = ifort
 FFLAGS = -O
 #
 LIBPATH = $(NETCDF_DIR)/lib
