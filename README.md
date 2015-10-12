@@ -10,7 +10,6 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
 <li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.
-</ul>
 <li><strong>Postpro</strong> - program for converting all of your sigma level ROMS output files into Z-level files.
 </ul>
 
@@ -48,6 +47,7 @@ This is a very useful set of tools for interpolating all of your ROMS results fi
 <li>Create symbolic links in the Files4Stat folder to your result files</li>
 <li>Edit the execute_Postpro.sh and execute it to generate input file for roms2z ./execute_Postpro.sh</li>
 <li>Run the ROMS_Postpro.job script (if not on super computer create a script file out of this job script)</li>
+</ul>
 
 <h3> Volume flux calculations </h3>
 
