@@ -17,7 +17,7 @@ tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
 
 # I had to run this command interactively to make this work (this script does not run as expected):
 # ./tpxo2grid /work/users/trondk/KINO/GRID/kino_1600m_18062015.nc nc kino_1600m_tpxo.nc /work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
-#./tpxo2grid ${gridfile} nc ${tpxodir}   # Extract TPXO-data to new model domain
+./tpxo2grid ${gridfile} nc ${tpxodir}   # Extract TPXO-data to new model domain
 
 #
 # NOTE !!!!!
@@ -34,7 +34,7 @@ perl -pe "s#MM_START#01#g"       < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#DD_START#01#g"       < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#HH_START#00#g"       < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#MI_START#00#g"       < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
-perl -pe "s#YY_END#${syear}#g"   < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
+perl -pe "s#YY_END#${eyear}#g"   < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#MM_END#12#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#DD_END#31#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#HH_END#00#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
