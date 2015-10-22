@@ -37,7 +37,7 @@ will look something like this:
 
 <h3> Generate observation file for IS4DVAR </h3>
 
-This is a set of scripts that automatically downloads Sea Surface Temperature (SST) data for your grid for the time period you are interested in and stored the data as an observation file. This file requires a special format and is read by ROMS when assimilating SST data using the Incremental Strong constraint 4DVAR assimilation technique. The SST data are downloaded using openDAP from the CoRTAD SST archive (http://www.nodc.noaa.gov/sog/Cortad/).
+This is a set of scripts that automatically downloads Sea Surface Temperature (SST) data for your grid for the time period you are interested in and stored the data as an observation file. This file requires a special format and is read by ROMS when assimilating SST data using the Incremental Strong constraint 4DVAR assimilation technique. The SST data are downloaded using openDAP from the CoRTAD SST archive (http://www.nodc.noaa.gov/sog/Cortad/) or the OI AVHRR SST (http://www.esrl.noaa.gov/psd/data/gridded/data.noaa.oisst.v2.highres.html).
 
 <h3> Postpro </h3>
 
