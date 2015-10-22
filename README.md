@@ -10,6 +10,7 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
 <li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.
+<li><strong>Postpro</strong> - program for converting all of your sigma level ROMS output files into Z-level files.
 </ul>
 
 
@@ -37,6 +38,16 @@ will look something like this:
 <h3> Generate observation file for IS4DVAR </h3>
 
 This is a set of scripts that automatically downloads Sea Surface Temperature (SST) data for your grid for the time period you are interested in and stored the data as an observation file. This file requires a special format and is read by ROMS when assimilating SST data using the Incremental Strong constraint 4DVAR assimilation technique. The SST data are downloaded using openDAP from the CoRTAD SST archive (http://www.nodc.noaa.gov/sog/Cortad/).
+
+<h3> Postpro </h3>
+
+This is a very useful set of tools for interpolating all of your ROMS results files into Z-level. To use this package: 
+
+<ul>
+<li>Create symbolic links in the Files4Stat folder to your result files</li>
+<li>Edit the execute_Postpro.sh and execute it to generate input file for roms2z ./execute_Postpro.sh</li>
+<li>Run the ROMS_Postpro.job script (if not on super computer create a script file out of this job script)</li>
+</ul>
 
 <h3> Volume flux calculations </h3>
 
