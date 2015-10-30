@@ -13,11 +13,13 @@ from mpl_toolkits.basemap import Basemap
 from pylab import *
 from netCDF4 import Dataset
 import datetime
+import matplotlib as mpl
+import mpl_util
 
 __author__   = 'Trond Kristiansen'
 __email__    = 'trond.kristiansen@imr.no'
 __created__  = datetime.datetime(2012, 8, 20)
-__modified__ = datetime.datetime(2012, 8, 20)
+__modified__ = datetime.datetime(2015, 10, 29)
 __version__  = "1.0"
 __status__   = "Development, 20.8.2012"
 
@@ -65,8 +67,9 @@ def contourMap(myCDF, bathymetry,lonrho,latrho,myvar,survey,Nobs,obs,first):
     map.drawcountries()
     map.drawmapboundary()
     print "Min %s and max %s of data"%(np.ma.min(mydata),np.ma.max(mydata))
-    
-    map.scatter(x,y,s=4,c=mydata,cmap=cm.get_cmap('jet'), edgecolor='none',vmin=-0.5, vmax=16)
+    levels=np.arange(-2,18,0.5)
+
+    map.scatter(x,y,s=4,c=mydata,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r), edgecolor='none',vmin=-2, vmax=18)
     c = plt.colorbar(orientation='horizontal')
     c.set_label("Obs. SST")
 
@@ -92,7 +95,7 @@ def contourMap(myCDF, bathymetry,lonrho,latrho,myvar,survey,Nobs,obs,first):
    # plt.show()
 
 
-infile="NS8KM_obsSST_2009_to_2012.nc"
+infile="NS8KM_AVHRR_obsSST_2012_to_2013.nc"
 gridfile="/Users/trondkr/Projects/is4dvar/Grid/nordsjoen_8km_grid_hmax20m.nc"
 
 myvar="obs_value"

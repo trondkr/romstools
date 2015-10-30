@@ -15,7 +15,7 @@ __version__  = "1.0"
 __status__   = "Development, 19.10.2015"
 
 def getLonLat(currentDate):
-    print "Getlonlat"
+
     if (currentDate.day >= 10):
         d="%s"%(currentDate.day)
     else:
@@ -56,17 +56,20 @@ def openAVHRR(currentDate,indexes):
     filename=base+file
     cdf=Dataset(filename)
 
-    print "Time: Extrating timedata from netCDF4 file: %s"%(filename)
+    print "Time: Extrating timedata from netCDF4 file: %s date: %s"%(filename,currentDate)
     
     time=np.squeeze(cdf.variables["time"][:])
-    longitude=np.squeeze(cdf.variables["lon"][int(indexes[0]):int(indexes[1])])
-
-    sst=cdf.variables["sst"][0,0,int(indexes[3]):int(indexes[2]),int(indexes[0]):int(indexes[1])]
+    longitude=np.squeeze(cdf.variables["lon"][:])
+ 
+    sst=cdf.variables["sst"][0,0,:,:]
     
-    data,longitude = convertDataTo180(sst,longitude)
+    mydata,longitude = convertDataTo180(sst,longitude)
+    longitude=longitude[int(indexes[0]):int(indexes[1])]
+    sst=mydata[int(indexes[2]):int(indexes[3]),int(indexes[0]):int(indexes[1])]
+    
     cdf.close()
 
-    return time, sst
+    return time, sst, longitude
 
 
 def convertDataTo180(mydata,longitude):
@@ -77,6 +80,7 @@ def convertDataTo180(mydata,longitude):
     lonsout[len(longitude[:])-i0:] = longitude[1:i0+1]
     mydataout[:,0:len(longitude[:])-i0]  = mydata[:,i0:]
     mydataout[:,len(longitude[:])-i0:] = mydata[:,1:i0+1]
+
     return mydataout, lonsout
 
 
@@ -86,15 +90,15 @@ def extractAVHRRLongLat(minLon,maxLon,minLat,maxLat,currentDate):
     combination of tiles. This is only necessary to do once so it is separated
     from the extraction of SST."""
     longitude,latitude,sst = getLonLat(currentDate)
-    print "SST",np.shape(sst)
+
     mydata,longitude = convertDataTo180(sst,longitude)
-   
+    
     """ We have to flip this array so that we have increasing latitude
      values required by np.interp function. This means we also have to
      flip the input SST array"""
-    latitude=np.flipud(latitude)
+    #latitude=np.flipud(latitude)
     lons,lats=np.meshgrid(longitude,latitude)
-
+    
     print "Full data range:"
     print "Long min: %s Long max: %s"%(longitude.min(),longitude.max())
     print "Lat min: %s Lat max: %s"%(latitude.min(),latitude.max())

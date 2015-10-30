@@ -103,8 +103,8 @@ def drawSST(ax,map,longSST,latSST,filledSST,myalpha):
     #levels=np.arange(filledSST.min(), filledSST.max(),0.2)
 
     if myalpha > 0.99:
-        #CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
-        CS2 = map.pcolor(x2,y2,filledSST)
+        CS2 = map.contourf(x2,y2,filledSST,levels,cmap=mpl_util.LevelColormap(levels,cmap=cm.RdYlBu_r),extend='both',alpha=myalpha)
+        #CS2 = map.pcolor(x2,y2,filledSST)
      
         plt.colorbar(CS2,orientation='vertical',extend='both', shrink=0.5)
     else:
@@ -135,7 +135,7 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
 
     map.drawcoastlines()
     map.drawcountries()
- #   map.fillcontinents(color='grey')
+    map.fillcontinents(color='grey')
     map.drawmeridians(np.arange(lonStart,lonEnd,10),labels=[0,0,0,1])
     map.drawparallels(np.arange(latStart,latEnd,4),labels=[1,0,0,0])
 
@@ -147,7 +147,7 @@ def makeMap(figureNumber,lonStart,lonEnd,latStart,latEnd,name,SSTi,lon_rho,lat_r
     #addGridToMap(map,grid_lon,grid_lat,doEveryTenthX=10)
 
     """Draw original SST"""
-    drawSST(ax,map,lonSST2D,latSST2D,origSST,0.5)
+    drawSST(ax,map,lonSST2D,latSST2D,origSST,0.8)
 
     """Draw interpolated  SST"""
     drawSST(ax,map,lon_rho,lat_rho,SSTi,1.0)
@@ -217,11 +217,11 @@ def getPolygon(lonSST,latSST,grid_lon,grid_lat):
 def main():
     startTime = time.time()
     """Define the start and end date you want data extracted for:"""
-    startDate=date(2013,1,1)
-    endDate=date(2013,12,30)
+    startDate=date(2012,6,1)
+    endDate=date(2013,12,31)
     firstIteration=True
     lastIteration=False
-    createFigure=True
+    createFigure=False
     figureNumber=0
     USENETCDF4=True    # if false then use NETCDF3_CLASSIC
 
@@ -256,29 +256,27 @@ def main():
                                                                         lat_rho.min(),
                                                                         lat_rho.max(),
                                                                         startDate)
-    latitude  = np.flipud(latitude[indexes[3]:indexes[2]])
+    latitude  = latitude[indexes[2]:indexes[3]]
     longitude = longitude[indexes[0]:indexes[1]]
- 
+    
     """Loop over all times and store to file or make map"""
-    polygon_data = getPolygon(lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
-                              latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
+    polygon_data = getPolygon(lonSST[indexes[2]:indexes[3],indexes[0]:indexes[1]],
+                              latSST[indexes[2]:indexes[3],indexes[0]:indexes[1]],
                               lon_rho,lat_rho)
     survey_time=[]
-
     for currentDate in daterange(startDate, endDate):
 
         print "\n-----\nCurrent date", currentDate
         """Open the files and check that NOAA is online"""
-        currentTime, sst = getAVHRR.openAVHRR(currentDate,indexes)
+        currentTime, sst,longitude = getAVHRR.openAVHRR(currentDate,indexes)
         currentDate=refDateROMS + datetime.timedelta(days=currentTime+daysSince1948to1978)
-        print "Currentdate from file",currentDate
         
         """Interpolate the original values to the grid. This is the data that will be saved to file"""
-
-        SSTi = mp.interp(np.flipud(sst),longitude,latitude,
+        SSTi = mp.interp(sst,longitude,latitude,
                              lon_rho,lat_rho,checkbounds=False,masked=True,order=1)
 
         SSTi = np.where(SSTi < -0.5, -0.5, SSTi)
+        print "Mean SST %s"%(np.ma.mean(SSTi))
 
         SSTi = SSTi*mask_rho
 
@@ -297,7 +295,7 @@ def main():
         for ot in xrange(numberOfobs):
             obs_time.append(currentTime+daysSince1948to1978)
             if ot==0:
-                print refDateROMS + datetime.timedelta(days=currentTime+daysSince1948to1978),currentTime+daysSince1948to1978
+                print "Date to file:", refDateROMS + datetime.timedelta(days=currentTime+daysSince1948to1978),currentTime+daysSince1948to1978
 
         print "Found %s observations for %s"%(numberOfobs, currentDate)
 
@@ -308,8 +306,8 @@ def main():
 
         if createFigure is True:
             makeMap(figureNumber,lon_start,lon_end,lat_start,lat_end,filename,SSTi,lon_rho,lat_rho,polygon_data,currentDate,
-                        sst,lonSST[indexes[3]:indexes[2],indexes[0]:indexes[1]],
-                                  latSST[indexes[3]:indexes[2],indexes[0]:indexes[1]])
+                        sst,lonSST[indexes[2]:indexes[3],indexes[0]:indexes[1]],
+                                  latSST[indexes[2]:indexes[3],indexes[0]:indexes[1]])
             figureNumber+=1
 
         """ Finished, now cleanup and make sure everything are arrays"""
