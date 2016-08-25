@@ -25,11 +25,14 @@ def getLonLat(currentDate):
     else:
         m="0%s"%(currentDate.month)
 
-    base="/Volumes/home/AVHRR-%s/"%(currentDate.year)
-
+    base="/Users/trondkr/Projects/NOWMAPS/AVHRR/%s/"%(currentDate.year)
+   # base="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/%s/AVHRR/"%(currentDate.year)
+    
     file="avhrr-only-v2.%s%s%s.nc"%(currentDate.year,m,d)
-
+    
     filename=base+file
+    print "test", filename
+
     cdf=Dataset(filename)
     longitude=np.squeeze(cdf.variables["lon"][:])
     latitude=np.squeeze(cdf.variables["lat"][:])
@@ -49,10 +52,10 @@ def openAVHRR(currentDate,indexes):
     else:
         m="0%s"%(currentDate.month)
 
-    base="/Volumes/home/AVHRR-%s/"%(currentDate.year)
-
+    base="/Users/trondkr/Projects/NOWMAPS/AVHRR/%s/"%(currentDate.year)
+   # base="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/%s/AVHRR/"%(currentDate.year)
     file="avhrr-only-v2.%s%s%s.nc"%(currentDate.year,m,d)
-
+    print file
     filename=base+file
     cdf=Dataset(filename)
 

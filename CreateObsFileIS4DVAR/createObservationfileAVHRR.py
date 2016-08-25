@@ -19,7 +19,7 @@ __email__    = 'trond.kristiansen@imr.no'
 __created__  = datetime.datetime(2012, 4, 8)
 __modified__ = datetime.datetime(2015, 10, 19)
 __version__  = "1.0"
-__status__   = "Development, 08.04.2012, 30.11.2012, 03.12.2012, 07.06.2013, 17.11.2013, 19.10.2015"
+__status__   = "Development, 08.04.2012, 30.11.2012, 03.12.2012, 07.06.2013, 17.11.2013, 19.10.2015, 08.07.2016"
 
 def help():
 
@@ -41,7 +41,7 @@ def help():
 
     ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/2013/AVHRR/
 
-    Trond Kristiansen, 08.04.2012, 30.11.2012, 03.12.2012, 19.10.2015
+    Trond Kristiansen, 08.04.2012, 30.11.2012, 03.12.2012, 19.10.2015, 08.07.2016
     """
 
 # http://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python
@@ -217,8 +217,8 @@ def getPolygon(lonSST,latSST,grid_lon,grid_lat):
 def main():
     startTime = time.time()
     """Define the start and end date you want data extracted for:"""
-    startDate=date(2012,6,1)
-    endDate=date(2013,12,31)
+    startDate=date(2013,12,2)
+    endDate=date(2014,12,31)
     firstIteration=True
     lastIteration=False
     createFigure=False

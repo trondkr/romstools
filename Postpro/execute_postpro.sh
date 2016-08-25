@@ -16,7 +16,7 @@ out_salt=1           # Switch to define if salinity is written to z/s-level-file
 out_temp=1           # Switch to define if temperature is written to z/s-level-file (=1) or not (=0)
 #
 # Name of experiment (only used in output filenames)
-exp='northsea_8km'
+exp='northsea_8km_is4dvar'
 #
 # List which z-levels you want to interpolate results to (nonnegative numbers, floating numbers allowed)
 out_zlevels="0 5 10 20 30 50 75 100 150 200 250 300 400 500 600 700 800 1000 1250 1500 1750 2000 2250 2500 2750 3000"

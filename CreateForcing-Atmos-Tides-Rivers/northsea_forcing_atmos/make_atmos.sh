@@ -5,9 +5,10 @@
 #--------------------------------------------------------
 #
 # List years (ERA-int available from 1989-today)
-years="2009 2010 2011 2012"
+years="2014"
 #
-gridfile=../nordsjoen_8km_grid.nc
+gridfile=/work/shared/imr/NS8KM/FORCING/GRID/nordsjoen_8km_grid_hmax20m_v4.nc
+
 atmeraintdir=/work/shared/norkyst/NorKyst-800m_Forcing/Atmos/ERA_Interim
 #
 cd Atmos
@@ -23,7 +24,7 @@ ${atmeraintdir}/ERA_fields_mask.nc
 ./
 EOF
     for param in Uwind Vwind Pair Tair Qair cloud rain swrad lwrad; do
-      mv ${param}.nc ../nordsjoen_8km_${param}_${year}.nc
+      mv ${param}.nc ../ns8km_${param}_${year}.nc
     done
   done  # years
 else

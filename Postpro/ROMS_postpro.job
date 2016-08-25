@@ -5,8 +5,8 @@
 # Specify the project the job should be accounted on
 #PBS -A imr
 #
-# The job needs at most 120 hours wall-clock time on 1 CPU
-#PBS -l mppwidth=1,walltime=120:00:00
+# The job needs at most 20 hours wall-clock time on 1 CPU
+#PBS -l mppwidth=1,walltime=20:00:00
 #
 # The job needs at most 1000mb of memory
 #PBS -l mppmem=1000mb

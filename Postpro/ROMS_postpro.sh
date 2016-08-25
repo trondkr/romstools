@@ -37,6 +37,7 @@ if [ ${roms2z} -eq 1 ]; then  # Interpolate ROMS results from s-levels/C-grid to
   for modfile in ${modfiles}; do
     echo ${modfile} >> ${BASE}/filelist.asc
   done
+
   echo
   echo "The following ROMS output files from ${RDIR} will be read:"
   cat ${BASE}/filelist.asc
@@ -59,7 +60,7 @@ if [ ${roms2z} -eq 1 ]; then  # Interpolate ROMS results from s-levels/C-grid to
 #
 # Interpolate to A-grid and z-levels
 #
-  cd ${BASE}/roms2z
+  cd ${BASE}
   if [ -s roms2z ]; then rm roms2z *.o; fi
   if [ ${machine} == 'hexagon' ]; then
     module unload xtpe-interlagos       # Makes it possible to run programs on login-nodes

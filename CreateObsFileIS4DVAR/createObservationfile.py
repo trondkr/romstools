@@ -214,7 +214,7 @@ def main():
     """Define the start and end date you want data extracted for:"""
     startYear=2009
     startMonth=10
-    endYear=2012
+    endYear=2013
     endMonth=12
     maxTries=3
     delay=10
