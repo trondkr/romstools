@@ -47,7 +47,7 @@ This is a very useful set of tools for interpolating all of your ROMS results fi
 <li>Create symbolic links in the Files4Stat folder to your result files</li>
 <li>Edit the execute_Postpro.sh and execute it to generate input file for roms2z ./execute_Postpro.sh</li>
 <li>Run the ROMS_Postpro.job script (if not on super computer create a script file out of this job script)</li>
-<li>Split the resulting large z-level-file into monthly average files by running the following: <li>
+<li>Split the resulting large z-level-file into monthly average files by running the following: </li>
 </ul>
 ```bash
 cd /work/trondk
