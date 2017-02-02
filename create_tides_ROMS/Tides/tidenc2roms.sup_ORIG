@@ -1,0 +1,29 @@
+! ============================================================================
+! 
+! tidenc2roms.sup
+! 
+! Set-up file for tidenc2roms
+!
+! Ann Kristin Sperrevik
+! Meteorologisk Institutt
+! 24 September 2008
+!
+! =============================================================================
+
+! -----------------------------------
+! time start: format = yyyy-mm-dd hh:mm:ss
+YY_START
+MM_START
+DD_START
+HH_START
+MI_START
+
+
+!------------------------------------
+! time end
+YY_END
+MM_END
+DD_END
+HH_END
+MI_END
+

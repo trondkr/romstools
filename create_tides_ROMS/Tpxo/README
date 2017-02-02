@@ -1,0 +1,10 @@
+This directory contains fortran code for reading TPXO data and interpolate to a specified grid. OBS! Velocities are kept as northward and eastward components.
+
+Program tpxo2grid is run in the following way:
+
+./tpxo2grid my_grid.file file.type outputfile.nc
+
+Input file may be either ROMS grid file (netcdf) or met.no sequential felt file.
+file.type should be nc or seq, respectively. 
+ 
+TPXO data files are found in the subdirectory DATA/
