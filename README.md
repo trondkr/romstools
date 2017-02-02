@@ -9,7 +9,9 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 <li><strong>VolumeFlux</strong> - volume flux calculations for transects between (x,y) grid points</li>
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
-<li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.
+<li><strong>create_atmos_ROMS</strong> - Create ERA INTERIM forcing for ROMS </li>
+<li><strong>create_tides_ROMS</strong> - Create tidal forcing for ROMS using TPXO7.2</li>
+<li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.(outdated - use create_tides_ROMS and create_atmos_ROMs instead)
 <li><strong>Postpro</strong> - program for converting all of your sigma level ROMS output files into Z-level files.
 </ul>
 
@@ -106,7 +108,29 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import iso
 >>> print iso.__doc__
 ```
-<h3> Create forcing for Atmosphere - Tides - Rivers </h3>
+
+<h3> Create Atmospheric forcing - create_atmos_ROMS</h3>
+This toolset contains necessary files to create forcing files for the atmosphere based on ERA INTERIM data. 
+
+Get the toolbox and move into folder ```create_atmos_ROMS```, edit the file ```make_atmos.sh``` so that the following variables are correct according to your setup:
+``` bash
+gridfile=/work/shared/nn9297k/FAABolous/WS4KM_grd.nc
+atmeraintdir=/work/shared/norkyst/NorKyst-800m_Forcing/Atmos/ERA_Interim
+for ((year=1980; year<=2015; year++)); 
+```
+Next compile and run with  ```./make_atmos.sh``` 
+
+<h3> Create Tidal forcing - create_tides_ROMS</h3>
+This toolset contains necessary files to create tidal forcing files for your ROMS grid. This requires you to download the TPXO7.2 files and put them in a folder called DATA under the create_tides_ROMS folder (create_tides_ROMS/DATA). 
+
+Get the toolbox and move into folder ```create_tides_ROMS```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup. Define start and end year forcing should be generated for and grid file):
+``` bash
+syear=1980; eyear=2017
+gridfile=/Users/trondkr/Dropbox/NIVA/FAABolous/Grid/WS4KM_grd.nc
+```
+Next compile and run with  ```./make_tides.sh```. Compilation works well on local computer with gfortran compiler (can be installed using brew). 
+
+<h3> Create forcing for Atmosphere - Tides - Rivers (OUTDATED - use the tools for tides and atmosphere above) </h3>
 This toolset contains necessary files to create forcing files for the atmosphere, tides, and river forcing. 
 
 <h4> Tides </h4>
