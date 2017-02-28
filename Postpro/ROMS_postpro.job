@@ -3,10 +3,10 @@
 #PBS -N "ROMS_postpro"
 #
 # Specify the project the job should be accounted on
-#PBS -A imr
+#PBS -A nn9297k
 #
 # The job needs at most 20 hours wall-clock time on 1 CPU
-#PBS -l mppwidth=1,walltime=20:00:00
+#PBS -l mppwidth=1,walltime=12:00:00
 #
 # The job needs at most 1000mb of memory
 #PBS -l mppmem=1000mb
@@ -22,7 +22,7 @@
 #
 # Set origin path
 #
-BASE=/work/shared/imr/NS8KM/romstools/Postpro/roms2z
+BASE=/work/shared/nn9297k/Postpro
 cd ${BASE}
 #
 # Read definitions and switches from a temporary definition-file made by execute_postpro.sh

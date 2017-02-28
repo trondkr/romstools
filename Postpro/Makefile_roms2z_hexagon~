@@ -1,9 +1,5 @@
 #
 #                                 Makefile for interpolating ROMS results to z-levels and A-grid
-# NEEDS TO BE COMPILED WITH
-# module swap PrgEnv-pgi PrgEnv-gnu
-# module unload notur
-# 
 FC = gfortran
 FFLAGS = -g
 #

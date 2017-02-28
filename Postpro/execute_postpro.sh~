@@ -4,7 +4,7 @@
 #
 # Decide whether you will run this script interactively (=0) or as a batch job (=1)
 # NB: If you apply the switch "roms2z", you should run this script as a batch job.
-batch=1
+batch=0
 #
 # Define which variables you want to extract from the model files
 out_zeta=1           # Switch to define if sea surface elevation is written to z/s-level-file (=1) or not (=0)

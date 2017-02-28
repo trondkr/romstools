@@ -1,19 +1,33 @@
-#!/bin/bash
+#PBS -S /bin/bash
+# Give the job a name
+#PBS -N "ROMS_postpro"
 #
-if [ $# -ne 1 ]; then
-  echo
-  echo 'Usage: ROMS_postpro.sh <def-file>'
-  echo
-  echo ' def-file: Ascii-file with definitions set in execute_postpro.sh'
-  exit
-fi
+# Specify the project the job should be accounted on
+#PBS -A nn9297k
+#
+# The job needs at most 20 hours wall-clock time on 1 CPU
+#PBS -l mppwidth=1,walltime=1:00:00
+#
+# The job needs at most 1000mb of memory
+#PBS -l mppmem=1000mb
+#
+# Send me an email on a=abort, b=begin, e=end
+#PBS -m abe
+#
+# Write the standard output of the job to file 'mpijob.out'
+#PBS -o ./roms2z.out
+#
+# Write the standard error of the job to file 'mpijob.err'
+#PBS -e ./roms2z.err
+#
+# Set origin path
+#
+BASE=/work/shared/nn9297k/Postpro
+cd ${BASE}
 #
 # Read definitions and switches from a temporary definition-file made by execute_postpro.sh
 #
-module swap PrgEnv-pgi PrgEnv-gnu
-module unload notur
-
-inpfil=${1}
+inpfil=${BASE}/roms_ptmp.in
 read out_zeta out_fluxes out_curr out_curr_rot out_curr_polar out_salt out_temp \
      out_slevel                                                                 \
      exp                                                                        \
@@ -23,11 +37,6 @@ read out_zeta out_fluxes out_curr out_curr_rot out_curr_polar out_salt out_temp 
      roms2z roms2s filestat_z filestat_s                                        \
      out_zlevels                                                                < ${inpfil}
 rm ${inpfil}
-#
-# Set origin path
-#
-BASE=`pwd`
-cd ${BASE}
 #
 # Make sure nco-module is loaded
 module load nco
@@ -40,7 +49,6 @@ if [ ${roms2z} -eq 1 ]; then  # Interpolate ROMS results from s-levels/C-grid to
   for modfile in ${modfiles}; do
     echo ${modfile} >> ${BASE}/filelist.asc
   done
-
   echo
   echo "The following ROMS output files from ${RDIR} will be read:"
   cat ${BASE}/filelist.asc
@@ -63,18 +71,15 @@ if [ ${roms2z} -eq 1 ]; then  # Interpolate ROMS results from s-levels/C-grid to
 #
 # Interpolate to A-grid and z-levels
 #
-  cd ${BASE}
+  cd ${BASE}/roms2z
   if [ -s roms2z ]; then rm roms2z *.o; fi
   if [ ${machine} == 'hexagon' ]; then
-    module unload xtpe-interlagos       # Makes it possible to run programs on login-nodes
+    module load xtpe-interlagos       # Makes it possible to run programs on computer-nodes
   fi
   make -f Makefile_roms2z_${machine}
-  if [ ${machine} == 'hexagon' ]; then
-    module load xtpe-interlagos
-  fi
 #
   if [ -s roms2z ]; then   # Run program
-    ./roms2z << EOF
+    aprun -n 1 -m 1000M ./roms2z << EOF
 ${BASE}/filelist.asc
 ${out_zeta} ${out_fluxes} ${out_curr} ${out_curr_rot} ${out_curr_polar} ${out_salt} ${out_temp}
 ${BASE}/${exp}_z.nc
@@ -95,7 +100,7 @@ EOF
 #
   cd ${BASE}
   rm ${BASE}/filelist.asc
-  echo "New file with model fields on z-levels located as " `${BASE}/${exp}_z.nc`
+  echo "New file with model fields on z-levels located as " `ls ${BASE}/${exp}_z.nc`
 #
 fi  # [ ${roms2z} -eq 1 ]
 #
@@ -131,22 +136,19 @@ if [ ${roms2s} -eq 1 ]; then  # Extract ROMS results from a pre-defined s-level
     echo "Extracted s-level fields from ${modfile} and written to ${BASE}/${exp}_s_${ii}.nc"
   done
   ncrcat -O ${BASE}/${exp}_s_???.nc ${BASE}/${exp}_s_Cgrid.nc
-  rm ${BASE}/${exp}_s_???OB
+  rm ${BASE}/${exp}_s_???.nc
 #
 # Interpolate fields on s-level from C-grid to A-grid
 #
-#  cd ${BASE}/roms2z
+  cd ${BASE}/roms2z
   if [ -s roms2agrid ]; then rm roms2agrid *.o; fi
   if [ ${machine} == 'hexagon' ]; then
-    module unload xtpe-interlagos       # Makes it possible to run programs on login-nodes
+    module load xtpe-interlagos       # Makes it possible to run programs on computer-nodes
   fi
   make -f Makefile_roms2agrid_${machine}
-  if [ ${machine} == 'hexagon' ]; then
-    module load xtpe-interlagos
-  fi
 #
   if [ -s roms2agrid ]; then   # Run program
-    ./roms2agrid << EOF
+    aprun -n 1 -m 1000M ./roms2agrid << EOF
 ${BASE}/${exp}_s_Cgrid.nc
 ${out_zeta} ${out_curr} ${out_curr_polar} ${out_salt} ${out_temp}
 ${BASE}/${exp}_s.nc
@@ -191,15 +193,15 @@ if [ ${filestat_z} -eq 1 ]; then  # Create files with statistics
 #
     echo "Calculate statistics from file with model results on A-grid/z-levels:"
 #   Get hyperslab based on defined subdomain
-    ncks -a -O -F -d x,${x0},${x1} -d y,${y0},${y1} ${BASE}/${exp}_z.nc ${BASE}/${exp}_z_sub.nc
+    aprun -n 1 -m 1000M ncks -a -O -F -d x,${x0},${x1} -d y,${y0},${y1} ${BASE}/${exp}_z.nc ${BASE}/${exp}_z_sub.nc
     echo "Hyperslab is made from file with model fields on z-levels, limits used are x:${x0}-${x1} and y:${y0}-${y1}"
     echo "New output file is " `ls ${BASE}/${exp}_z_sub.nc`
 #
 #   Calculate time average for all fields (possible to limit number of fields according to min/max time steps and/or stride
-    ncra -O -F -d time,1,,1 ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_mean.nc
+    aprun -n 1 -m 1000M ncra -O -F -d time,1,,1 ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_mean.nc
     echo "Time averaged fields calculated and stored on " `ls ${BASE}/${exp}_z_sub_mean.nc`
 #   Find rms values over dimension time
-    ncra -O -y rms ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_rms.nc
+    aprun -n 1 -m 1000M ncra -O -y rms ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_rms.nc
     echo "Fields with root mean squared values found and stored on " `ls ${BASE}/${exp}_z_sub_rms.nc`
 #
 #   Split the last tasks according to memory limitations
@@ -221,15 +223,15 @@ if [ ${filestat_z} -eq 1 ]; then  # Create files with statistics
       echo "Area no. ${n} covers ${dim}-gridpoints from ${a} to ${btxt}"
 #
 #     Find minimum values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -y min -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_min_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -y min -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_min_${n}.nc
       echo "Fields with minimum values for area ${n} found and stored on " `ls ${BASE}/${exp}_z_sub_min_${n}.nc`
 #     Find maximum values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -y max -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_max_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -y max -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_max_${n}.nc
       echo "Fields with maximum values for area ${n} found and stored on " `ls ${BASE}/${exp}_z_sub_max_${n}.nc`
 #   Find standard deviation values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_std_${n}.nc
-      ncbo -O -F -d ${dim},${a},${b},1 --op_typ=sub ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_std_${n}.nc ${BASE}/${exp}_z_sub_std_${n}.nc
-      ncra -O -y rmssdn ${BASE}/${exp}_z_sub_std_${n}.nc ${BASE}/${exp}_z_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -a time ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncbo -O -F -d ${dim},${a},${b},1 --op_typ=sub ${BASE}/${exp}_z_sub.nc ${BASE}/${exp}_z_sub_std_${n}.nc ${BASE}/${exp}_z_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncra -O -y rmssdn ${BASE}/${exp}_z_sub_std_${n}.nc ${BASE}/${exp}_z_sub_std_${n}.nc
       echo "Fields with standard deviation values for area ${n} found and stored on " `ls ${BASE}/${exp}_z_sub_std_${n}.nc`
     done  # n
 #
@@ -262,15 +264,15 @@ if [ ${filestat_s} -eq 1 ]; then  # Create files with statistics
 #
     echo "Calculate statistics from file with model results on C-grid/s-level:"
 #   Get hyperslab based on defined subdomain
-    ncks -a -O -F -d x,${x0},${x1} -d y,${y0},${y1} ${BASE}/${exp}_s.nc ${BASE}/${exp}_s_sub.nc
+    aprun -n 1 -m 1000M ncks -a -O -F -d x,${x0},${x1} -d y,${y0},${y1} ${BASE}/${exp}_s.nc ${BASE}/${exp}_s_sub.nc
     echo "Hyperslab is made from file with model fields on z-levels, limits used are x:${x0}-${x1} and y:${y0}-${y1}"
     echo "New output file is " `ls ${BASE}/${exp}_s_sub.nc`
 #
 #   Calculate time average for all fields (possible to limit number of fields according to min/max time steps and/or stride
-    ncra -O -F -d time,1,,1 ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_mean.nc
+    aprun -n 1 -m 1000M ncra -O -F -d time,1,,1 ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_mean.nc
     echo "Time averaged fields calculated and stored on " `ls ${BASE}/${exp}_s_sub_mean.nc`
 #   Find rms values over dimension time
-    ncra -O -y rms ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_rms.nc
+    aprun -n 1 -m 1000M ncra -O -y rms ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_rms.nc
     echo "Fields with root mean squared values found and stored on " `ls ${BASE}/${exp}_s_sub_rms.nc`
 #
 #   Split the last tasks according to memory limitations
@@ -292,15 +294,15 @@ if [ ${filestat_s} -eq 1 ]; then  # Create files with statistics
       echo "Area no. ${n} covers ${dim}-gridpoints from ${a} to ${btxt}"
 #
 #     Find minimum values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -y min -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_min_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -y min -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_min_${n}.nc
       echo "Fields with minimum values for area ${n} found and stored on " `ls ${BASE}/${exp}_s_sub_min_${n}.nc`
 #     Find maximum values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -y max -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_max_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -y max -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_max_${n}.nc
       echo "Fields with maximum values for area ${n} found and stored on " `ls ${BASE}/${exp}_s_sub_max_${n}.nc`
 #     Find standard deviation values over dimension time
-      ncwa -O -F -d ${dim},${a},${b},1 -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_std_${n}.nc
-      ncbo -O -F -d ${dim},${a},${b},1 --op_typ=sub ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_std_${n}.nc ${BASE}/${exp}_s_sub_std_${n}.nc
-      ncra -O -y rmssdn ${BASE}/${exp}_s_sub_std_${n}.nc ${BASE}/${exp}_s_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncwa -O -F -d ${dim},${a},${b},1 -a time ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncbo -O -F -d ${dim},${a},${b},1 --op_typ=sub ${BASE}/${exp}_s_sub.nc ${BASE}/${exp}_s_sub_std_${n}.nc ${BASE}/${exp}_s_sub_std_${n}.nc
+      aprun -n 1 -m 1000M ncra -O -y rmssdn ${BASE}/${exp}_s_sub_std_${n}.nc ${BASE}/${exp}_s_sub_std_${n}.nc
       echo "Fields with standard deviation values for area ${n} found and stored on " `ls ${BASE}/${exp}_s_sub_std_${n}.nc`
     done  # n
 #

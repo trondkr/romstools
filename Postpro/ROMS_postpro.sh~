@@ -10,9 +10,6 @@ fi
 #
 # Read definitions and switches from a temporary definition-file made by execute_postpro.sh
 #
-module swap PrgEnv-pgi PrgEnv-gnu
-module unload notur
-
 inpfil=${1}
 read out_zeta out_fluxes out_curr out_curr_rot out_curr_polar out_salt out_temp \
      out_slevel                                                                 \

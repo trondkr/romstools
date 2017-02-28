@@ -56,7 +56,7 @@ CHARACTER(len=80) :: xi_dimnameo, eta_dimnameo
 
 INTEGER :: i, j, k, itime, jd, yy, mm, dd, hh
 INTEGER :: iout
-CHARACTER (len=100) :: listfile, avgfilei, ofile
+CHARACTER (len=300) :: listfile, avgfilei, ofile
 
 REAL, DIMENSION(:,:), ALLOCATABLE :: ipos
 REAL, DIMENSION(:,:), ALLOCATABLE :: jpos
@@ -187,12 +187,10 @@ statusi = nf90_get_var(ncgridi,id_rmaski,rmaski);        IF (statusi /= nf90_NoE
 statusi = nf90_get_var(ncgridi,id_umaski,umaski);        IF (statusi /= nf90_NoErr) CALL handle_err(statusi)
 statusi = nf90_get_var(ncgridi,id_vmaski,vmaski);        IF (statusi /= nf90_NoErr) CALL handle_err(statusi)
 
-hmini = 1.0e+23
-DO j=1,Mpi
-DO i=1,Lpi
-   hmini = MIN(hmini,hi(i,j))
-ENDDO
-ENDDO
+hmini = 1000
+
+hmini=MINVAL(hi)
+print*,"test",hmini,Tclinei,theta_si,theta_bi
 PRINT '(A,2F10.2)','Hmin and Tcli (input-grid): ', hmini, Tclinei
 PRINT '(A,2F10.2)','Theta_s and Theta_b (input-grid): ', theta_si, theta_bi
 
@@ -203,7 +201,9 @@ ALLOCATE(sc_ri(Ni))
 ALLOCATE(Cs_ri(Ni))
 
 hci = MIN(hmini,Tclinei)
+
 IF (theta_si /= 0.0) THEN
+
   cff1i=1.0/SINH(theta_si)
   cff2i=0.5/TANH(0.5*theta_si)
 END IF
