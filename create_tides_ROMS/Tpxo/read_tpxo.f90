@@ -8,8 +8,8 @@ subroutine read_tpxo(F,FF,name,nx,ny,nc,ndim,infile,gridfile,type)
   real, dimension(ny,nx,nc) :: FF
   integer                   :: nx, ny, nc,ndim
   character (len=5)         :: name
-  character (len=20)        :: gridfile
-  character (len=20)        :: infile
+  character (len=100)        :: gridfile
+  character (len=100)        :: infile
   character (len=1)         :: type   ! Must be either z,u,v
 
   real, dimension(ny,nx)    :: G, lat, lon

@@ -9,7 +9,10 @@
 # Start and end period for simulation
 syear=1980; eyear=2017
 # Input files
-gridfile=/Users/trondkr/Dropbox/NIVA/FAABolous/Grid/WS4KM_grd.nc
+gridfile=/Users/trondkr/Dropbox/NIVA/ROHO800/Grid/ROHO800_grid.nc
+
+# Name of app
+APPNAME=ROHO800
 
 #
 cd Tpxo
@@ -17,7 +20,7 @@ if [ -s tpxo2grid ]; then rm tpxo2grid *.o; fi
 make
 
 # I had to run this command interactively to make this work (this script does not run as expected):
-./tpxo2grid ${gridfile} nc ws4km_tpxo.nc  # Extract TPXO-data to new model domain
+./tpxo2grid ${gridfile} nc ${APPNAME}_tpxo.nc   # Extract TPXO-data to new model domain
 cd ..
 #
 export CRAY_CPU_TARGET=x86-64
@@ -38,10 +41,10 @@ perl -pe "s#DD_END#31#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#HH_END#00#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 perl -pe "s#MI_END#00#g"         < tmp1.fil > tmp2.fil; mv tmp2.fil tmp1.fil
 mv tmp1.fil ./tidenc2roms.sup
-ln -sf ../Tpxo/ws4km_tpxo.nc ./tpxo.nc
+ln -sf ../Tpxo/${APPNAME}_tpxo.nc ./tpxo.nc
 ./tidenc2roms
 rm ./tpxo.nc
-mv ./tide.nc ../ws4km_tides.nc
+mv ./tide.nc ../${APPNAME}_tides.nc
 #module unload pgi/11.10.0
 #
 cd ..

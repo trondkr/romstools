@@ -10,9 +10,9 @@ program tpxo2grid
   include "netcdf.inc"
 
   ! TPXO files
-  character (len=20)       :: tpxo_grd = "DATA/grid_tpxo7.2.nc"
-  character (len=20)       :: tpxo_h   = "DATA/h_tpxo7.2.nc   "
-  character (len=20)       :: tpxo_u   = "DATA/u_tpxo7.2.nc   "
+  character (len=100)       :: tpxo_grd = "/Volumes/DATASETS/tpxo9_netcdf/grid_tpxo9.nc"
+  character (len=100)       :: tpxo_h   = "/Volumes/DATASETS/tpxo9_netcdf/h_tpxo9.v1.nc"
+  character (len=100)       :: tpxo_u   = "/Volumes/DATASETS/tpxo9_netcdf/u_tpxo9.v1.nc"
 
   ! TPXO grid 
   integer                                       :: nx, ny, nc, nct       ! dimensions
@@ -172,7 +172,6 @@ program tpxo2grid
   status=nf_inq_dimid(ncid_grd,'ny', dimid); call check_err(status)
   status = nf_inq_dimlen(ncid_grd, dimid, ny); call check_err(status)
   status=nf_close(ncid_grd); call check_err(status)
-
   status=nf_open(tpxo_h, NF_NOWRITE, ncid_h); call check_err(status)
   status=nf_inq_dimid(ncid_h,'nc', dimid); call check_err(status)
   status = nf_inq_dimlen(ncid_h, dimid, nc); call check_err(status)
