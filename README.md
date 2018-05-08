@@ -9,7 +9,7 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
   
 <li><a href="https://github.com/trondkr/romstools/tree/master/VolumeFlux"><strong>VolumeFlux</strong></a> - ROMS volume flux calculations for transects between (x,y) grid points </li>
 
-<li><a href="https://github.com/trondkr/model2roms"><strong>model2roms</strong></a> - easily create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox </li>
+<li><a href="https://github.com/trondkr/model2roms"><strong>model2roms</strong></a> - Easily create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox </li>
 
 <li><a href="https://github.com/trondkr/romstools/tree/master/Tools"><strong>Tools</strong></a> - Selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
 
