@@ -5,15 +5,19 @@ Romstools
 Romstools is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
 
 <ul>
-<li><a href="https://github.com/trondkr/romstools/tree/master/CreateObsFileIS4DVAR><strong>CreateObsFileIS4DVAR</strong></a> - Generate observation file from SST required to run IS4DVAR assimilation with ROMS </li>
-<li><a href="https://github.com/trondkr/romstools/tree/master/VolumeFlux><strong>VolumeFlux</strong></a> - ROMS volume flux calculations for transects between (x,y) grid points </li>
-<li><a href="https://github.com/trondkr/model2roms><strong>model2roms</strong></a> - easily create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox </li>
-<li><a href="https://github.com/trondkr/romstools/tree/master/Tools><strong>Tools</strong></a> - Selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
-<li><a href="https://github.com/trondkr/romstools/tree/master/create_atmos_ROMS><strong>create_atmos_ROMS</strong></a> - Create ERA INTERIM forcing for ROMS </li>
+<li><a href="https://github.com/trondkr/romstools/tree/master/CreateObsFileIS4DVAR"><strong>CreateObsFileIS4DVAR</strong></a> - Generate observation file from SST required to run IS4DVAR assimilation with ROMS </li>
+  
+<li><a href="https://github.com/trondkr/romstools/tree/master/VolumeFlux"><strong>VolumeFlux</strong></a> - ROMS volume flux calculations for transects between (x,y) grid points </li>
 
-<li><a href="https://github.com/trondkr/romstools/tree/master/create_tides_ROMS><strong>create_tides_ROMS</strong></a>  - Create tidal forcing for ROMS using TPXO9.1 </li>
+<li><a href="https://github.com/trondkr/model2roms"><strong>model2roms</strong></a> - easily create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox </li>
 
-<li><a href="https://github.com/trondkr/romstools/tree/master/Postpro><strong>Postpro/strong></a> - Program for converting all of your sigma level ROMS output files into Z-level files </li>
+<li><a href="https://github.com/trondkr/romstools/tree/master/Tools"><strong>Tools</strong></a> - Selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
+
+<li><a href="https://github.com/trondkr/romstools/tree/master/create_atmos_ROMS"><strong>create_atmos_ROMS</strong></a> - Create ERA INTERIM forcing for ROMS </li>
+
+<li><a href="https://github.com/trondkr/romstools/tree/master/create_tides_ROMS"><strong>create_tides_ROMS</strong></a>  - Create tidal forcing for ROMS using TPXO9.1 </li>
+
+<li><a href="https://github.com/trondkr/romstools/tree/master/Postpro"><strong>Postpro/strong></a> - Program for converting all of your sigma level ROMS output files into Z-level files </li>
 </ul>
 
 
@@ -120,34 +124,26 @@ for ((year=1980; year<=2015; year++));
 Next compile and run with  ```./make_atmos.sh``` 
 
 <h3> Create Tidal forcing - create_tides_ROMS</h3>
-This toolset contains necessary files to create tidal forcing files for your ROMS grid. This requires you to download the TPXO7.2 files and put them in a folder called DATA under the create_tides_ROMS folder (create_tides_ROMS/DATA). 
+This toolset contains necessary files to create tidal forcing files for your ROMS grid. Start by editing the ```make_tides.sh``` file to point to the correct grid, appname, and time eperiod you wnat forcing created for.
 
-Get the toolbox and move into folder ```create_tides_ROMS```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup. Define start and end year forcing should be generated for and grid file):
 ``` bash
+# Start and end period for simulation
 syear=1980; eyear=2017
-gridfile=/Users/trondkr/Dropbox/NIVA/FAABolous/Grid/WS4KM_grd.nc
-```
-Next compile and run with  ```./make_tides.sh```. Compilation works well on local computer with gfortran compiler (can be installed using brew). 
 
-<h3> Create forcing for Atmosphere - Tides - Rivers (OUTDATED - use the tools for tides and atmosphere above) </h3>
-This toolset contains necessary files to create forcing files for the atmosphere, tides, and river forcing. 
+# Input files
+gridfile=/Users/trondkr/Dropbox/NIVA/ROHO800/Grid/ROHO800_grid.nc
 
-<h4> Tides </h4>
-Get the toolbox and move into folder ```northsea_forcing_tides```, edit the file ```make_tides.sh``` so that the following variables are correct according to your setup:
-``` bash
-syear=1990; eyear=2014
-gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
-tpxodir=/work/shared/norkyst/NorKyst-800m_Forcing/Tpxo_AtlanticOcean
+# Name of app
+APPNAME=ROHO800
 ```
-Next compile and run with  ```./make_tides.sh``` 
 
-<h4> Atmospheric forcing (ERA Interim) </h4>
-Move into folder ```northsea_forcing_atmos```, edit the file ```make_atmos.sh``` so that the following variables are correct according to your setup:
-``` bash
-years="2009 2010 2011 2012"
-gridfile=/work/users/trondk/KINO/GRID/kino_norseas_800m_grid.nc
-```
-Next compile and run with  ```./make_atmos.sh``` 
+Make sure you download the latest <a><href="http://volkov.oce.orst.edu/tides/global.html"><TPXO9.1></a> files from Oregon State University (OSU) before you continue. Edit the path for the data input file inside the file ```Tpxo/tpxo2grid.f90``` to direct to teh path where you stored the TPXO9.1 files (grid_tpxo9.nc, h_tpxo9.v1.nc, u_tpxo9.v1.nc):
+  
+``` fortran
+character (len=100)       :: tpxo_grd = "/Volumes/DATASETS/tpxo9_netcdf/grid_tpxo9.nc"
+character (len=100)       :: tpxo_h   = "/Volumes/DATASETS/tpxo9_netcdf/h_tpxo9.v1.nc"
+character (len=100)       :: tpxo_u   = "/Volumes/DATASETS/tpxo9_netcdf/u_tpxo9.v1.nc"
+``` Compilation works well on local computer with gfortran compiler (can be installed using brew). 
 
 <h4> River forcing </h4>
 Move into folder ```northsea_forcing_rivers```, edit the file ```make_rivers.sh``` so that the following variables are correct according to your setup:
