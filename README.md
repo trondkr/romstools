@@ -17,7 +17,7 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 
 <li><a href="https://github.com/trondkr/romstools/tree/master/create_tides_ROMS"><strong>create_tides_ROMS</strong></a>  - Create tidal forcing for ROMS using TPXO9.1 </li>
 
-<li><a href="https://github.com/trondkr/romstools/tree/master/Postpro"><strong>Postpro/strong></a> - Program for converting all of your sigma level ROMS output files into Z-level files </li>
+<li><a href="https://github.com/trondkr/romstools/tree/master/Postpro"><strong>Postpro</strong></a> - Program for converting all of your sigma level ROMS output files into Z-level files </li>
 </ul>
 
 
