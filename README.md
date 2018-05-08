@@ -5,15 +5,10 @@ Romstools
 Romstools is a toolbox that contains a variety of programs useful for Regional Ocean Model (ROMS) developers. Our goal with this and other toolboxes available on Github is to provide everything required to setup, run, and analyse the ROMS model (ROMS - http://myroms.org/). Currently, the following tools are included but split into separate packages/folders that can be used indepdentely.
 
 <ul>
-
 <li><a href="https://github.com/trondkr/romstools/tree/master/CreateObsFileIS4DVAR><strong>CreateObsFileIS4DVAR</strong></a> - Generate observation file from SST required to run IS4DVAR assimilation with ROMS </li>
-
 <li><a href="https://github.com/trondkr/romstools/tree/master/VolumeFlux><strong>VolumeFlux</strong></a> - ROMS volume flux calculations for transects between (x,y) grid points </li>
-
 <li><a href="https://github.com/trondkr/model2roms><strong>model2roms</strong></a> - easily create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox </li>
-  
 <li><a href="https://github.com/trondkr/romstools/tree/master/Tools><strong>Tools</strong></a> - Selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
-   
 <li><a href="https://github.com/trondkr/romstools/tree/master/create_atmos_ROMS><strong>create_atmos_ROMS</strong></a> - Create ERA INTERIM forcing for ROMS </li>
 
 <li><a href="https://github.com/trondkr/romstools/tree/master/create_tides_ROMS><strong>create_tides_ROMS</strong></a>  - Create tidal forcing for ROMS using TPXO9.1 </li>
