@@ -10,7 +10,7 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 <li><strong> Model2roms</strong> - automatically create BRY, INIT ,and CLIM files required to run ROMS using the model2roms toolbox - https://github.com/trondkr/model2roms</li>
 <li><strong>Tools</strong> - a selection of useful scripts that can come in handy when working with NetCDF files and ROMS </li>
 <li><strong>create_atmos_ROMS</strong> - Create ERA INTERIM forcing for ROMS </li>
-<li><strong>create_tides_ROMS</strong> - Create tidal forcing for ROMS using TPXO7.2</li>
+<li><strong>create_tides_ROMS</strong> - Create tidal forcing for ROMS using TPXO9.1</li>
 <li><strong>CreateForcing-Atmos-Tides-Rivers</strong> - programs that create atmospheric, river, and tidal forcing for your ROMS model.(outdated - use create_tides_ROMS and create_atmos_ROMs instead)
 <li><strong>Postpro</strong> - program for converting all of your sigma level ROMS output files into Z-level files.
 </ul>
@@ -18,12 +18,10 @@ Romstools is a toolbox that contains a variety of programs useful for Regional O
 
 <h3> General requirements</h3>
 <ul>
-<li>Python installation with numpy, basemap, and matplotlib</li>
-<li>Python netCDF4 interface - http://code.google.com/p/netcdf4-python/</li>
-<li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules</li>
-<li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> or
-<a href="https://www.enthought.com/">Enthought</a> is reccomended</li>
-<li>Fortran NetCDF interface (required to compile CreateForcing-Atmos-Tides-Rivers)</li>
+<li>Python installation with numpy, netcdf4, basemap, and matplotlib</li>
+<li>In some cases a Fortran compiler combined with F2PY (part of numpy) is required to create python modules (gfortran is great)</li>
+<li>A full Python distribution package such as <a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> is reccomended</li>
+<li><a href="https://www.unidata.ucar.edu/downloads/netcdf/index.jsp">Fortran</a> NetCDF interface (required to compile create_tides)</li>
 <li> To run interaxctively on Hexagon (HPC) remember to: <b>module unload xtpe-interlagos</b> </li>
 </ul>
 
