@@ -56,7 +56,7 @@ def download_sst():
 
 def read_nc_sst():
     with xr.open_dataset('Copernicus.nc') as ds:
-        print (ds)
+        return ds
 
 
 if __name__== '__main__':

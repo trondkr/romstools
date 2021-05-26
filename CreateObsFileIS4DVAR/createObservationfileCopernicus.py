@@ -2,16 +2,16 @@
    but here we will use the data downloaded from Copernicus 
    CopernicusSST.py'''
 
+
+#import numpy.ma as ma
+#import matplotlib.pyplot as plt
+import xesmf as xe
+#from pylab import *
+#import mpl_util
+#import matplotlib as mpl
 import os, sys, datetime, string
 import numpy as np
 import CopernicusSST
-import numpy.ma as ma
-import matplotlib.pyplot as plt
-
-from pylab import *
-import mpl_util
-import matplotlib as mpl
-
 
 #import writeObsfile
 import time
@@ -39,18 +39,18 @@ def getGrid():
         print (f"Grid domain latitude from {ds.lat_rho.min().values} to {ds.lat_rho.max().values}")
 
         """Calculate the x,y grid coordinates"""
-        (Mp,Lp)= ds.lon_rho.shape
-        X=np.arange(0,Mp,1)
-        Y=np.arange(0,Lp,1)
+        #(Mp,Lp)= ds.lon_rho.shape
+        #X=np.arange(0,Mp,1)
+        #Y=np.arange(0,Lp,1)
 
-        return mask_rho, grid_lon, grid_lat,grid_h,X,Y
-
-
-def ingrid(lon, lat, lon_bd,lat_bd):
-    return mpl.mlab.inside_poly(zip(lon, lat),  zip(lon_bd, lat_bd))
+        return mask_rho, grid_lon, grid_lat,grid_h,ds
 
 
-def getPolygon(lonSST,latSST,grid_lon,grid_lat):
+'''def ingrid(lon, lat, lon_bd,lat_bd):
+    return mpl.mlab.inside_poly(zip(lon, lat),  zip(lon_bd, lat_bd))'''
+
+
+'''def getPolygon(lonSST,latSST,grid_lon,grid_lat):
 
     lon_bd = np.concatenate((grid_lon[:,0],grid_lon[-1,:],grid_lon[::-1,-1], grid_lon[0,::-1] ))
     lat_bd = np.concatenate((grid_lat[:,0],grid_lat[-1,:],grid_lat[::-1,-1], grid_lat[0,::-1] ))
@@ -61,7 +61,7 @@ def getPolygon(lonSST,latSST,grid_lon,grid_lat):
         polygon_data[0,k]=lon_bd[k]
         polygon_data[1,k]=lat_bd[k]
 
-    return polygon_data
+    return polygon_data'''
 
 def check_duplicates_output_file(outputFile):
     if os.path.exists(outputFile): 
@@ -82,37 +82,37 @@ def main():
     check_duplicates_output_file("NS8KM_Copernicus_obsSST.nc")
 
     """Read the grid info from the grid file"""
-    mask_rho, lon_rho,lat_rho,grid_h,Y,X = getGrid()
+    mask_rho, lon_rho,lat_rho,grid_h,ds_grid = getGrid()
 
-    CopernicusSST.read_nc_sst()
+    ''' Read the file with SST data downloaded from Copernicus'''
+    ds_copernicus = CopernicusSST.read_nc_sst()
 
-    """Get the longitude-latitudes of the AVHRR files"""
-    #longitude, latitude, lonSST, latSST, indexes = getAVHRR.extractAVHRRLongLat(lon_rho.min(),
-    #                                                                    lon_rho.max(),
-    #                                                                    lat_rho.min(),
-    #                                                                    lat_rho.max(),
-    #                                                                    startDate)
+    #TODO: Now I need to create a subsample from the grind file with only lat and lon, to use those lat and lon 
+    # for interpolating the copernicus file 
+    # Problem is xi and eta dimensions, grid file is 2d 
+
+    print (ds_grid['lat_rho'].values)
+    print (ds_copernicus['lat'].values)   
+    print (ds_grid.keys)
 
 
-    '''
+
+    #print (ds_copernicus.isel(time=0))
+    
+    #regridder = xe.Regridder(ds, ds_out, 'bilinear')
+    #regridder.clean_weight_file()
+    #regridder
+
+
+    
     """AVHRR time is days since 1978/1/1 00:00:00"""
-    refDate=datetime.datetime(1978,1,1,0,0,0)
+    #refDate=datetime.datetime(1978,1,1,0,0,0)
     
     """Have to convert the day of observation to the relative time used by ROMS
     which is 1948/1/1:00:00:00"""
-    refDateROMS=datetime.datetime(1948,1,1,0,0,0)
-    delta=refDate-refDateROMS
-    daysSince1948to1978=delta.days
-
-
-    latitude  = latitude[indexes[2]:indexes[3]]
-    longitude = longitude[indexes[0]:indexes[1]]
-    
-    """Loop over all times and store to file or make map"""
-    polygon_data = getPolygon(lonSST[indexes[2]:indexes[3],indexes[0]:indexes[1]],
-                              latSST[indexes[2]:indexes[3],indexes[0]:indexes[1]],
-                              lon_rho,lat_rho)
-    '''
+    #refDateROMS=datetime.datetime(1948,1,1,0,0,0)
+    #delta=refDate-refDateROMS
+    #daysSince1948to1978=delta.days
 
     '''                          
     survey_time=[]
@@ -213,5 +213,5 @@ if __name__ == "__main__":
     main()
 
 
-    #mask_rho, lon_rho,lat_rho,grid_h,Y,X = getGrid()
+    #mask_rho, lon_rho,lat_rho,grid_h= getGrid()
     
