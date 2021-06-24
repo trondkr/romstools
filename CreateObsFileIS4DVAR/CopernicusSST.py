@@ -19,6 +19,9 @@ def download_sst():
 
     Read the description of this command line tool 
     https://resources.marine.copernicus.eu/?option=com_csw&view=order&record_id=9bee0cb0-343d-421a-9a19-150dd07fb0e5
+
+    also requires module motuclient 
+    conda install -c conda-forge motuclient
     '''
 
     addr = 'https://nrt.cmems-du.eu/motu-web/Motu'
@@ -35,11 +38,15 @@ def download_sst():
 
     filename = 'Copernicus.nc'
 
-    long_min = 2.5
-    long_max = 6.5
 
-    lat_min = 58
-    lat_max = 61
+    #Grid domain longitude from 3.074508711425683 to 7.310298838994383
+    #Grid domain latitude from 58.70190312968447 to 61.15879809421052
+
+    long_min = 3
+    long_max = 7.35
+
+    lat_min = 58.5
+    lat_max = 61.2
     start = "2018-12-01 12:00:00"
     stop = "2020-12-31 12:00:00"
 
@@ -61,3 +68,4 @@ def read_nc_sst():
 
 if __name__== '__main__':
     pass
+    download_sst()

@@ -2,36 +2,25 @@
    but here we will use the data downloaded from Copernicus 
    CopernicusSST.py'''
 
-
-#import numpy.ma as ma
-#import matplotlib.pyplot as plt
 import xesmf as xe
-#from pylab import *
-#import mpl_util
-#import matplotlib as mpl
+import xarray as xr
+
 import os, sys, datetime, string
 import numpy as np
 import CopernicusSST
-
-#import writeObsfile
 import time
 from datetime import timedelta, date
-import xarray as xr
-
-
-# http://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python
-def daterange(start_date, end_date):
-    for n in range(int ((end_date - start_date).days)):
-        yield start_date + timedelta(n)
 
 
 def getGrid():
-    with xr.open_dataset('norfjords_160m_grid_A04.nc') as ds:
+    path_grind = '/home/lisapro/OneDrive/Documents/Projects/from Windows/norfjords_160m_grid_A04.nc'
+    with xr.open_dataset(path_grind) as ds:
 
-        
+        #We get only 'rho' values
         grid_lon = ds.lon_rho.values
         grid_lat = ds.lat_rho.values      
         mask_rho = ds.mask_rho.values 
+
         grid_h = ds.h.values
 
         print ("Grid dimmensions: %s and %s"%(ds.lon_rho.shape,ds.lat_rho.shape))
@@ -46,38 +35,12 @@ def getGrid():
         return mask_rho, grid_lon, grid_lat,grid_h,ds
 
 
-'''def ingrid(lon, lat, lon_bd,lat_bd):
-    return mpl.mlab.inside_poly(zip(lon, lat),  zip(lon_bd, lat_bd))'''
-
-
-'''def getPolygon(lonSST,latSST,grid_lon,grid_lat):
-
-    lon_bd = np.concatenate((grid_lon[:,0],grid_lon[-1,:],grid_lon[::-1,-1], grid_lon[0,::-1] ))
-    lat_bd = np.concatenate((grid_lat[:,0],grid_lat[-1,:],grid_lat[::-1,-1], grid_lat[0,::-1] ))
-
-    """ Save the polygon as array to plot later"""
-    polygon_data=np.empty((2,len(lon_bd)))
-    for k in xrange(len(lon_bd)):
-        polygon_data[0,k]=lon_bd[k]
-        polygon_data[1,k]=lat_bd[k]
-
-    return polygon_data'''
-
 def check_duplicates_output_file(outputFile):
     if os.path.exists(outputFile): 
         os.remove(outputFile)
 
 def main():
 
-    '''startTime = time.time()
-
-    """Define the start and end date you want data extracted for:"""
-    startDate=date(2013,12,2)
-    endDate=date(2014,12,31)
-    firstIteration=True
-    lastIteration=False
-
-    USENETCDF4=True    # if false then use NETCDF3_CLASSIC'''
 
     check_duplicates_output_file("NS8KM_Copernicus_obsSST.nc")
 
@@ -87,23 +50,16 @@ def main():
     ''' Read the file with SST data downloaded from Copernicus'''
     ds_copernicus = CopernicusSST.read_nc_sst()
 
-    #TODO: Now I need to create a subsample from the grind file with only lat and lon, to use those lat and lon 
-    # for interpolating the copernicus file 
-    # Problem is xi and eta dimensions, grid file is 2d 
+    ds_out = ds_grid.rename({'lon_rho': 'lon', 'lat_rho': 'lat'})
 
-    print (ds_grid['lat_rho'].values)
-    print (ds_copernicus['lat'].values)   
-    print (ds_grid.keys)
-
-
-
-    #print (ds_copernicus.isel(time=0))
-    
-    #regridder = xe.Regridder(ds, ds_out, 'bilinear')
+    regridder = xe.Regridder(ds_copernicus.isel(time=0), ds_out, 'bilinear')
     #regridder.clean_weight_file()
-    #regridder
-
-
+    ds_out = regridder(ds_copernicus)
+    print ('regridded, now saving netcdf ')
+    try:
+        ds_out.to_netcdf('Copernicus_regridded.nc')
+    except Exception as e:
+        print (e)
     
     """AVHRR time is days since 1978/1/1 00:00:00"""
     #refDate=datetime.datetime(1978,1,1,0,0,0)

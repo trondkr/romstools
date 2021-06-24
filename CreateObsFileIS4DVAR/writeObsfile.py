@@ -143,7 +143,7 @@ def writeData(outputFile,obs_lat,obs_lon,obs_value,Nobs,survey_time,obs_time,obs
       f1.variables["obs_Zgrid"][indexStart:indexEnd] = obs_Zgrid
     
       t1 = time.time()
-      print "array append created in %s seconds"%(t1-t0)
+      print ("array append created in %s seconds"%(t1-t0))
       f1.close()
 
    if lastIteration is True:
